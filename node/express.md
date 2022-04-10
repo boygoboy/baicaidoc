@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-10T11:04:52.890Z
+date: 2022-04-10T14:33:38.070Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -89,4 +89,41 @@ console.log(res.params) //输出：{id:33}
 })
 app.listen(80,()=>{console.log('server is started at http://127.0.0.1')})
 ```
-
+# 托管静态资源
+## express.static()用法
++ 描述
+express.static()方法可以创建一个静态资源服务器，将js、css、image等资源开放供外部访问,比如public目录下有index.html文件，使用```app.use(express.static('public'))```即可创建静态资源服务器。浏览器输入http://127.0.0.1/index.html即可访问该资源。
+> 注意：public目录并不会出现在访问路径里面
+{.is-warning}
++ 案例
+将clock目录下的资源开放为静态资源，实现代码如下：
+``` js
+const express=require('express')
+const app=express()
+app.use(express.static('./clock'))
+app.listen(80,()=>{
+console.log('server is started at http://127.0.0.1')
+})
+```
+浏览器中输入：http://127.0.0.1/index.html即可访问资源
+## 托管多个静态资源目录
++ 描述
+通过多次调用express.static()方法可创建多个静态资源目录
+``` js
+app.use(express.static('public'))
+app.use(express.static('clock'))
+```
+以上即可创建两个静态资源目录
+> 注意：访问静态资源文件时，express.static()会根据添加资源目录的顺序查找所需文件，例如：public和clock目录下都有index.html文件，那么当浏览器中输入：http://127.0.0.1/index.html会访问public目录下的index.html
+{.is-warning}
+## 挂载路径前缀
++ 描述
+如果想在访问的静态资源文件前挂载路径前缀可通过``` app.use('/public',express.static('public'))``` 方式实现
++ 案例
+``` js
+const express=require('express')
+const app=express()
+app.use('/public',express.static('./public'))
+app.listen(80,()=>{console.log('server is started at http://127.0.0.1')})
+```
+此时浏览器中需要输入：http://127.0.0.1/public/index.html才可以访问index.html网页
