@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-11T07:55:35.460Z
+date: 2022-04-11T09:21:39.986Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -189,4 +189,111 @@ app.listen(81,()=>{console.log('Server is started at http://127.0.0.1')})
 ``` js
 app.use('/api',router)
 ```
+# 中间件
++ 描述
+ 需要达到某种结果中间进行多个预处理的过程为中间件，上一个中间件的输出是下一个中间件的输入，express的中间件调用流程是：一个请求到达Express的服务器之后，连续调用多个中间件，对这次请求进行预处理最终返回响应结果。
++ express中间件的格式
+express中间件的本质就是一个function处理函数，例如：```app.get('/get',(req,res,next)=>{...})```中回调函数为中间件。
+> 注意：中间件和路由处理函数的区别是中间件包含next，next的作用：把中间件串联起来，把流转关系转交个下一个中间件或者路由。
+{.is-warning}
 
+## 全局中间件
++ 定义全局中间件
+``` js
+const mc=(req,res,next)=>{console.log('第一个中间件') next()}
+```
++ 使用多个中间件
+注册多个中间件使用app.use()多次注册即可
+``` js
+const mc=(req,res,next)=>{console.log('第一个中间件')}
+app.use(mc)
+//中间件可这样简写
+app.use((req,res.next)=>{console.log('第二个中间件')})
+```
+完整代码
+``` js
+const express=require('express')
+const router=require('./router')
+const app=express()
+const mc1=(req,res,next)=>{
+    console.log('第一个中间件')
+    next()
+}
+app.use(mc1)
+app.use((req,res,next)=>{
+    console.log('第二个中间件')
+    next()
+})
+app.use(router)
+app.listen(81,()=>{console.log('Server is started at http://127.0.0.1')})
+```
+这里客户端发起请求后服务端执行的顺序是：输出'第一个中间件'->'第二个中间件'->路由处理函数。
+> 注意：这里路由模块的注册需要放在全局中间件注册代码后面，否则执行api请求时全局中间件并没有注册导致使用失败
+{.is-warning}
++ 中间件的作用
+多个中间件之间共享一份req和res。基于这样的特性在上游中间件中统一为req和res对象添加自定义属性和方法，供下游中间件或路由使用。
++ 例子
+``` js
+const express=require('express')
+const router=require('./router')
+const app=express()
+const mc1=(req,res,next)=>{
+    req.first='aa'
+    console.log('第一个中间件')
+    next()
+}
+app.use(mc1)
+app.use((req,res,next)=>{
+     console.log(req.first) //aa
+    console.log('第二个中间件')
+    next()
+})
+app.use(router)
+app.listen(81,()=>{console.log('Server is started at http://127.0.0.1')})
+```
+上述例子体现了中间件的这一作用，在第一个中间件为req对象添加first属性，第二个中间件即可使用该属性。
+# 局部中间件
++ 介绍
+局部中间件即不使用app.use()创建的中间件叫局部中间件
++ 创建局部中间件
+``` js
+const express=require('express')
+const app=express()
+const mc1=(req,res,next)=>{
+    req.first='aa'
+    console.log('第一个中间件')
+    next()
+}
+app.get('/',mc1,(req,res)=>{})
+app.listen(81,()=>{console.log('Server is started at http://127.0.0.1')})
+```
+这里在app.get()中传入创建的mc1中间件即可注册局部中间件
++ 注册多个局部中间件
+``` js
+const express=require('express')
+const app=express()
+const mc1=(req,res,next)=>{
+    req.first='aa'
+    console.log('第一个中间件')
+    next()
+}
+const mc2=(req,res,next)=>{
+    req.first='aa'
+    console.log('第二个中间件')
+    next()
+}
+app.get('/',mc1,mc2,(req,res)=>{})
+app.listen(81,()=>{console.log('Server is started at http://127.0.0.1')})
+```
+注册多个中间件在app.get()中传入多个中间件即可。
+> 注册多个中间件还可简写为：app.get('/',[mc1,mc2],(req,res)=>{})
+{.is-info}
+
+> 中间件使用注意事项：
+{.is-warning}
+
+1. 一定要在路由之前注册中间件
+2. 客户端发送过来的请求，可以连续调用多个中间件进行处理
+3. 执行完中间件的业务代码之后，不要忘记调用next()函数
+4. 为防止业务代码逻辑混乱，调用next()函数后不要再写额外的代码
+5. 连续调用多个中间件，多个中间件共享req和res
