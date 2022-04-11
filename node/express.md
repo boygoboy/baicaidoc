@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-11T07:07:34.388Z
+date: 2022-04-11T07:55:35.460Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -153,5 +153,40 @@ res.send('success')
 })
 app.listen(80,()=>{console.log('server is started at http://127.0.0.1')})
 ```
+## 路由的模块化
++ 描述
+为方便路由进行模块化管理不推荐直接挂载到app上，可单独封装为单独模块导入挂载使用，步骤如下：
+1. 创建路由模块对应的.js文件
+2. 调用 express.Router()函数创建路由对象
+3. 向路由对象上挂载具体的路由
+4. 使用module.exports向外共享路由对象
+5. 使用app.use()函数注册路由模块
++ 代码实现
+**自定义文件：router.js**
+``` js
+const express=require('express')
+// 创建路由对象
+const router=express.Router()
+// 挂载具体的路由
+router.get('/get',(req,res)=>{console.log('get')})
+router.post('/post',(req,res)=>{console.log('post')})
+//向外导出路由
+module.exports=router
+```
+**在index.js文件中使用**
+``` js
+const express=require('express')
+const router=require('./router')
+const app=express()
+app.use(router)
+app.listen(81,()=>{console.log('Server is started at http://127.0.0.1')})
+```
+> 这里的app.use()作用是注册全局中间件
+{.is-info}
 
+**拓展：**
+当需要为路由路径前添加公共访问路径，可在app.use()中配置
+``` js
+app.use('/api',router)
+```
 
