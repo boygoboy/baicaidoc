@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-11T05:12:14.024Z
+date: 2022-04-11T07:07:34.388Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -140,4 +140,18 @@ npm install -g nodemon
 ``` shell
 nodemon ./index.js
 ```
+# express路由
+## 路由的概述
++ 描述
+express路由是指客户端请求与服务器端对应服务的映射，express路由包括：url、方法、功能处理函数。
++ 简单使用
+``` js
+const express=require('express')
+const app=express()
+app.get('/',(req,res)=>{
+res.send('success')
+})
+app.listen(80,()=>{console.log('server is started at http://127.0.0.1')})
+```
+
 
