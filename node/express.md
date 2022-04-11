@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-10T14:36:33.052Z
+date: 2022-04-11T05:12:14.024Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -127,3 +127,17 @@ app.use('/public',express.static('./public'))
 app.listen(80,()=>{console.log('server is started at http://127.0.0.1')})
 ```
 此时浏览器中需要输入：http://127.0.0.1/public/index.html才可以访问index.html网页
+# nodemon工具的使用
++ 描述
+该工具的作用是可以监听代码的修改然后自动重启node服务器。
++ 使用
+1. 安装
+``` shell
+npm install -g nodemon
+```
+2. 使用
+终端中输入nodemon+要执行node文件的路径
+``` shell
+nodemon ./index.js
+```
+
