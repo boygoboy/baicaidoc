@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-11T09:21:39.986Z
+date: 2022-04-12T01:47:45.030Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -297,3 +297,70 @@ app.listen(81,()=>{console.log('Server is started at http://127.0.0.1')})
 3. 执行完中间件的业务代码之后，不要忘记调用next()函数
 4. 为防止业务代码逻辑混乱，调用next()函数后不要再写额外的代码
 5. 连续调用多个中间件，多个中间件共享req和res
+# 中间件的分类
+1. 应用级别中间件
+通过app.use()或app.get()或app.post()，绑定到app实例上的中间件叫做应用级别的中间件，代码示例如下：
+``` js
+app.use((req,res,next)=>{next()})
+app,get('/',mc1,(req,res)=>{})
+```
+2. 路由级别中间件
+绑定到express.Router()实例上的中间件叫做路由级别的中间件，示例代码如下：
+``` js
+let app=express()
+let router=express.Router()
+router.use((req,res,next)=>{
+next()
+})
+```
+3. 错误级别的中间件
+用于捕获项目中异常错误的中间件，其处理函数有四个形参：err、req、res、next，示例代码：
+``` js
+const express=require('express')
+const app=express()
+app.get('/',(req,res)=>{
+throw new Error('error')
+  res.send('success')
+})
+app.use((err,req,res,next)=>{res.send('err')})
+app.listen(80,()=>{console.log(server is started at http://127.0.0.1)})
+```
+> 注意：错误级别的中间件要放在所有路由后面，否则会报错！
+{.is-warning}
+
+4. express内置的中间件
++ express.static快速托管静态资源的内置中间件，例如：html、css、js（无兼容性）
++ express.json()解析JSON格式的请求体数据（有兼容性，仅在4.16.0+ 版本中可用）
+``` js
+const express=require('express')
+const app=express()
+app.use(express.json())
+app.post('/',(req,res)=>{console.log(req.body)})
+app.listen(80,()=>{})
+```
+通过注册处理json的内置中间件即可获取客户端发送过来的json格式数据，通过req.body获取
++ express.urlencoded解析URL-encoded格式的请求体数据（有兼容性，仅在4.16.0+ 版本中可使用）
+当客户端发送url-encoded格式的数据可以通过以下方式解析
+``` js
+const express=require('express')
+const app=express()
+app.use(express.urlencoded({extended:false}))
+app.post('/',(req,res)=>{console.log(req.body)})
+app.listen(80,()=>{})
+```
+通过req.body即可获取客户端发送过来的url-encoded格式的数据
+5. 第三方中间件
+非express官方内置，由第三方开发出来的中间件，比如express 4.16.0之前的版本使用body-parser第三方中间件解析url-encoded格式的数据，实例：
++ 安装依赖
+``` shell
+npm install body-parser
+```
++ 使用
+``` js
+const express=require('express')
+const app=express()
+const parser=require('body-parser')
+app.use(parser.urlencoded({extended:false}))
+app.post('/',(req,res)=>{console.log(req.body)})
+app.listen(80,()=>{})
+```
