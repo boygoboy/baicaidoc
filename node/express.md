@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-12T01:47:45.030Z
+date: 2022-04-12T04:11:31.386Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -364,3 +364,86 @@ app.use(parser.urlencoded({extended:false}))
 app.post('/',(req,res)=>{console.log(req.body)})
 app.listen(80,()=>{})
 ```
+# 自定义中间件
++ 实现步骤
+1. 定义中间件
+2. 监听req的data事件
+3. 监听req的end事件
+4. 使用querystring模块解析请求体数据
+5. 将解析出来的数据对象挂载为req.body
+6. 将自定义中间件封装为模块
++ 具体实现
+这里以自定义解析客户端发送的urlencoded格式的数据为例：
+1. 定义中间件
+``` js
+app.use((req,res,next)=>{})
+```
+2. 监听req的data事件
+由于客户端发送的数据比较大的时候，需要将数据分段发送这样会多次触发data事件，因此需要手动将接收到的数据进行拼接。
+``` js
+ let str=''
+    req.on('data',(chunk)=>{
+        str+=chunk
+    })
+```
+3. 监听req的end事件
+当请求体发送数据完毕后会自动触发end事件，此时可以进行数据的处理
+``` js
+req.on('end',()=>{})
+```
+4. 使用querystring模块解析请求体数据
+node.js内置了一个querystring模块，专门用来处理查询字符串。其parse()方法可以把查询字符串解析为对象格式，示例：
+``` js
+const qs=require('querystring')
+    req.on('end',()=>{
+        console.log(str)
+        //处理客户端请求的数据
+        const body=qs.parse(str)
+        req.body=body
+    })
+```
+5. 将解析出来的数据对象挂载为req.body
+``` js
+   req.on('end',()=>{
+        console.log(str)
+        //处理客户端请求的数据
+        const body=qs.parse(str)
+        req.body=body
+        next()
+    })
+```
+> 注意：处理完客户端请求的数据不要忘记调用next()交给下一级中间件或路由
+{.is-warning}
+
+**以上完整代码：**
+``` js
+const express=require('express')
+const qs=require('querystring')
+const app=express()
+//定义注册中间件
+app.use((req,res,next)=>{
+    let str=''
+    req.on('data',(chunk)=>{
+        str+=chunk
+    })
+
+    req.on('end',()=>{
+        console.log(str)
+        //处理客户端请求的数据
+        const body=qs.parse(str)
+        req.body=body
+        next()
+    })
+    
+})
+
+app.post('/',(req,res)=>{
+    res.send('success')
+})
+
+app.listen(80,()=>{
+    console.log('server is started at http://127.0.0.1')
+})
+```
+
+
