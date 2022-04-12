@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-12T04:11:31.386Z
+date: 2022-04-12T05:36:08.921Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -445,5 +445,36 @@ app.listen(80,()=>{
     console.log('server is started at http://127.0.0.1')
 })
 ```
-
-
+6. 将自定义中间件封装为模块
+**custommc.js文件中封装解析urlencoded的中间件功能函数**
+``` js
+const qs=require('querystring')
+const babelencoded=function(req,res,next){
+    let str=''
+    req.on('data',(chunk)=>{
+        str+=chunk
+    })
+    req.on('end',()=>{
+        const body=qs.parse(str)
+        req.body=body
+        next()
+    })
+}
+module.exports=babelencoded
+```
+**mc.js中注册使用中间件**
+``` js
+const qs=require('querystring')
+const babelencoded=function(req,res,next){
+    let str=''
+    req.on('data',(chunk)=>{
+        str+=chunk
+    })
+    req.on('end',()=>{
+        const body=qs.parse(str)
+        req.body=body
+        next()
+    })
+}
+module.exports=babelencoded
+```
