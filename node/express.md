@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-13T12:19:48.572Z
+date: 2022-04-13T12:32:32.478Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -527,3 +527,28 @@ app.listen(80,()=>{
 console.log('server is started at http://127.0.0.1')
 })
 ```
+# 接口跨域问题
+## 使用cors中间件方案解决跨域问题
++ 使用流程
+1. 运行 ```npm install cors``` 安装中间件
+2. 使用 ```const cors=require('cors')导入中间件
+3. 在路由之前调用app.use(cors())配置中间件
++ 代码
+``` js
+const express=require('express')
+const app=express()
+const apirouter=require('./apirouter')
+const cors=require('cors')
+app.use(cors())
+app.use(express.urlencoded({extended:false}))
+app.use('/api',apirouter)
+app.listen(80,()=>{
+console.log('server is started at http://127.0.0.1')
+})
+```
+> 注意：一定要在路由之前配置中间件
+{.is-warning}
+
++ cors使用注意点
+1. cors在服务端进行配置，客户端不需要做配置
+2. cors具有兼容性，在低版本浏览器不兼容
