@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-12T05:36:08.921Z
+date: 2022-04-13T11:26:46.259Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -477,4 +477,52 @@ const babelencoded=function(req,res,next){
     })
 }
 module.exports=babelencoded
+```
+# 编写get接口
+**apirouter.js文件**
+``` js
+const express=require('express')
+const router=express.Router()
+
+router.get('/get',(req,res)=>{
+    const query=req.query
+    res.send({
+        query
+    })
+})
+module.exports=router
+```
+**index.js文件**
+``` js
+const express=require('express')
+const app=express()
+const apirouter=require('./apirouter')
+app.use('/api',apirouter)
+app.listen(80,()=>{
+console.log('server is started at http://127.0.0.1')
+})
+```
+# 编写post接口
+**apirouter.js文件**
+``` js
+const express=require('express')
+const router=express.Router()
+
+router.post('/post',(req,res)=>{
+    const body=req.body
+    res.send({
+        body
+    })
+})
+module.exports=router
+```
+**index.js文件**
+``` js
+const express=require('express')
+const app=express()
+const apirouter=require('./apirouter')
+app.use('/api',apirouter)
+app.listen(80,()=>{
+console.log('server is started at http://127.0.0.1')
+})
 ```
