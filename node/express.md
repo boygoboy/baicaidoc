@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-13T11:26:46.259Z
+date: 2022-04-13T12:19:48.572Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -521,6 +521,7 @@ module.exports=router
 const express=require('express')
 const app=express()
 const apirouter=require('./apirouter')
+app.use(express.urlencoded({extended:false}))
 app.use('/api',apirouter)
 app.listen(80,()=>{
 console.log('server is started at http://127.0.0.1')
