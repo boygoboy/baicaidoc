@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-13T12:32:32.478Z
+date: 2022-04-13T12:54:27.259Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -552,3 +552,25 @@ console.log('server is started at http://127.0.0.1')
 + cors使用注意点
 1. cors在服务端进行配置，客户端不需要做配置
 2. cors具有兼容性，在低版本浏览器不兼容
+# 跨域cors相关的三个响应头
+## Access-Control-Allow-Origin响应头
++ 描述
+响应头部可以携带一个Access-Control-Allow-Origin字段，语法如下：
+``` js
+Access-Control-Allow-Origin:<origin>|*
+```
+这里origin指允许访问资源的外域URL
+例如：
+1. 允许百度访问资源
+``` js
+res.setHeader('Access-Control-Allow-Origin','https://www.baidu.com')
+````
+2. 允许所有外域访问资源
+``` js
+res.setHeader('Access-Control-Allow-Origin','*')
+```
+## Access-Control-Allow-Headers响应头
++ 描述
+默认情况CORS仅支持客户端发送如下9个请求头：
+Accept、Accept-Language、Content-Language、DPR、Downlink、Save-Data、Viewport-Width、Width、Content-Type（值仅限于text/plain、multipart/form-data、application/x-www-form-urlencoded三者之一）
+如果客户端向服务器发送额外的请求头信息，需要在服务端通过Access-Control-Allow-Headers对额外的请求头进行声明，否则请求失败！
