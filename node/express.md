@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-13T12:55:26.494Z
+date: 2022-04-13T13:08:19.706Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -574,3 +574,20 @@ res.setHeader('Access-Control-Allow-Origin','*')
 默认情况CORS仅支持客户端发送如下9个请求头：
 Accept、Accept-Language、Content-Language、DPR、Downlink、Save-Data、Viewport-Width、Width、Content-Type（值仅限于text/plain、multipart/form-data、application/x-www-form-urlencoded三者之一）
 如果客户端向服务器发送额外的请求头信息，需要在服务端通过Access-Control-Allow-Headers对额外的请求头进行声明，否则请求失败！
++ 使用
+``` js
+res.setHeader('Access-Control-Allow-Headers','Content-Type,X-Custom-Header')
+```
+这里自定义允许Content-Type和X-Custom-Header请求头访问
+## Access-Control-Allow-Methods响应头
++ 描述
+默认情况下仅支持客户端发起GET、POST、HEAD请求
++ 使用
+1. 如果希望服务端支持客户端发送PUT、DELETE请求，需做以下设置：
+``` js
+res.setHeader('Access-Control-Allow-Methods','PUT,DELETE')
+```
+2. 如果希望服务端支持客户端发送所有请求，做以下设置：
+``` js
+res.setHeader('Access-Control-Allow-Methods','*')
+```
