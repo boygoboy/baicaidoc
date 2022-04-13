@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-13T13:08:19.706Z
+date: 2022-04-13T14:05:05.586Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -591,3 +591,128 @@ res.setHeader('Access-Control-Allow-Methods','PUT,DELETE')
 ``` js
 res.setHeader('Access-Control-Allow-Methods','*')
 ```
+# 跨域CORS简单请求与预检请求
+## 简单请求
++ 描述
+满足以下两个条件属于简单请求：
+1. 请求方式：GET、POST、HEAD三者之一
+2. 请求头为默认的9个请求头（见上述响应头）
+## 预检请求
++ 描述
+预检请求与简单请求对立，其满足以下条件：
+1. 请求为GET、POST、HEAD之外的Methods类型
+2. 请求头中包含自定义头部字段
+3. 向服务器发送了application/json的字段
+在浏览器与服务器正式通信之前，浏览器会发送OPTION请求进行预检，获取服务器是否允许该实际请求，这次的OPTION请求称为预检请求，服务器成功响应后才会发起真正的请求并携带数据。
+## 简单请求和预检请求区别
++ 简单请求特点：客户端与服务器之间只会发生一次请求
++ 预检请求：客户端与服务器之间发生两次请求
+# 编写JSONP接口
+1. JSON的概念与特点
++ 概念
+浏览器通过script标签的src属性，请求服务器上的数据，同时服务器返回一个函数的调用，这种请求数据的方式叫做JSONP。
++ 特点
+（1） JSONP不属于真正的ajax请求，因为它没有使用XMLHttpRequest这个对象
+（2）JSONP仅支持GET请求，不支持POST、PUT、DELETE等请求。
+2. 创建JSONP接口
++ 创建JSONP接口注意点
+如果项目中配置了CORS资源共享，必须在CORS中间件之前声明JSONP接口，否则JSONP接口会被处理成开启了CORS的接口
++ 创建JSONP接口
+``` js
+const express=require('express')
+const app=express()
+const apirouter=require('./apirouter')
+const cors=require('cors')
+app.use(express.urlencoded({extended:false}))
+app.get('/api/jsonp',(req,res)=>{})
+app.use(cors())
+app.use('/api',apirouter)
+app.listen(80,()=>{
+console.log('server is started at http://127.0.0.1')
+})
+```
+3. 实现JSONP接口
++ 案例描述 
+（1）获取客户端发送过来的回调函数的名字
+（2）得到要通过JSONP形式发送给客户端的数据
+（3）根据前两步得到的数据，拼接出一个函数调用的字符串
+（4）把上一步调用的字符串响应给客户端的script标签进行解析执行
++ 具体代码
+**js核心代码**
+``` js
+const express=require('express')
+const app=express()
+const apirouter=require('./apirouter')
+const cors=require('cors')
+app.use(express.urlencoded({extended:false}))
+app.get('/api/jsonp',(req,res)=>{
+const funcName=req.query.callback
+const data={id:1,name:'cwj'}
+const returnStr=`${funcName}(${JSON.stringify(data)})`
+res.send(returnStr)
+})
+app.use(cors())
+app.use('/api',apirouter)
+app.listen(80,()=>{
+console.log('server is started at http://127.0.0.1')
+})
+```
+**客户端调用测试**
+``` js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btnget">GET</button>
+    <button id="btnpost">POST</button>
+    <button id="btnjsonp">JSONP</button>
+    <script src="https://cdn.staticfile.org/jquery/1.10.0/jquery.min.js"></script>
+    <script>
+    $(function(){
+      $('#btnget').on('click',function(){
+        $.ajax({
+            type:'GET',
+            url:'http://127.0.0.1/api/get',
+            data:{
+                id:1,
+                name:'cwj'
+            },
+            success:function(res){
+                console.log(res)
+            }
+        })
+      })
+      $('#btnpost').on('click',function(){
+        $.ajax({
+            type:'POST',
+            url:'http://127.0.0.1/api/post',
+            data:{
+                id:1,
+                name:'cwj'
+            },
+            success:function(res){
+                console.log(res)
+            }
+        })
+      })
+      $('#btnjsonp').on('click',function(){
+          $.ajax({
+              type:'GET',
+              url:'http://127.0.0.1/api/jsonp',
+              dataType:'jsonp',
+              success:function(res){
+                  console.log(res)
+              }
+          })
+      })
+    })
+    </script>
+</body>
+</html>
+```
+
