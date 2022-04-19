@@ -2,7 +2,7 @@
 title: sql基本操作
 description: 对mysql的基本操作
 published: 1
-date: 2022-04-15T14:58:50.841Z
+date: 2022-04-19T11:35:10.121Z
 tags: mysql
 editor: markdown
 dateCreated: 2022-04-15T14:19:08.581Z
@@ -54,4 +54,45 @@ delete from 表名称 where 列名称 = 值
 删除user表中id为3的用户
 ``` sql
 delete from user where id = 3
+```
+# sql的where语句
+1. 语法
+where 子句用于限定选择的标准。在select、update、delete语句中都可使用它来限定选择的标准
+``` sql
+select 列名称 from 表名称 where 列 运算符 值
+update 表名称 set 列=新值 where 列 运算符 值
+delete from 表名称 where 列 运算符 值
+```
+2. 可以在where子句中使用的运算符
+下面的运算符可在where子句中使用：
+|操作符|描述|
+|----|----|
+|=|等于|
+|<>|不等于|
+|>|大于|
+|<|小于|
+|>=|大于等于|
+|<=|小于等于|
+|BETWEEN|在某个范围内|
+|LIKE|搜索某种模式|
+3. 例子
+``` sql
+//查询status为1的所有用户
+select * from users where status=1
+//查询id 大于 2 的所有用户
+select * from users where id>2
+//查询username 不等于admin 的所有用户
+select * from users where username <>'admin'
+```
+# sql的and和or运算符
+1. 语法
+and 和or可在where子句中把两个或多个条件结合起来，and表示必须同时满足多个条件，or表示只要满足任意一个条件即可
+2. 例子
++ 使用and来显示所有status为0，并且id小于3的用户
+``` sql
+select * from users where status=0 and id<3
+```
++ 使用or来显示所有status为1，或者username为zs的用户
+``` sql
+select *from users where status=1 or username='zs
 ```
