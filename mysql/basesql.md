@@ -2,7 +2,7 @@
 title: sql基本操作
 description: 对mysql的基本操作
 published: 1
-date: 2022-04-19T11:35:50.893Z
+date: 2022-04-19T14:15:21.544Z
 tags: mysql
 editor: markdown
 dateCreated: 2022-04-15T14:19:08.581Z
@@ -95,4 +95,27 @@ select * from users where status=0 and id<3
 + 使用or来显示所有status为1，或者username为zs的用户
 ``` sql
 select *from users where status=1 or username='zs
+```
+# sql的order by子句
+1. 语法
+order by 语句用云根据指定的列对结果集进行排序
+order by 语句默认按照升序对记录进行排序
+如果按照降序对记录进行排序可以使用desc关键字
+2. 例子
++ order by升序排序
+对user表中的数据按照status 字段进行升序排序
+``` sql
+select * from users order by status 
+//或者
+select * from users order by status as asc
+```
++ order by降序排序
+对users表中的数据按照id字段进行降序排序
+``` sql
+select * from users order by id desc
+```
++ order by多重排序
+对users表中的数据先按照status字段进行降序排序再按照username的字母顺序进行升序排序
+``` sql
+select * from users order by status desc,username asc
 ```
