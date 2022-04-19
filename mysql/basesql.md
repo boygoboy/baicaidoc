@@ -2,7 +2,7 @@
 title: sql基本操作
 description: 对mysql的基本操作
 published: 1
-date: 2022-04-19T14:15:21.544Z
+date: 2022-04-19T14:29:57.566Z
 tags: mysql
 editor: markdown
 dateCreated: 2022-04-15T14:19:08.581Z
@@ -113,9 +113,26 @@ select * from users order by status as asc
 对users表中的数据按照id字段进行降序排序
 ``` sql
 select * from users order by id desc
-```
+```sl
 + order by多重排序
 对users表中的数据先按照status字段进行降序排序再按照username的字母顺序进行升序排序
 ``` sql
 select * from users order by status desc,username asc
+```
+# sql的count(*)函数
+1. 语法
+count(*)函数用于返回查询结果的总数据条数，语法格式如下：
+``` sql
+select count(*) from 表名称
+```
+2. 示例
+查询users表中status 为0的总数据条数：
+``` sql
+select count(*) from users where status=0
+```
+# sql的as设置为列设置别名
+使用as关键字可以为查询出来的列名称设置别名
+``` sql
+select count(*) as total from users where status=0
+select username as name, password as pwd from users
 ```
