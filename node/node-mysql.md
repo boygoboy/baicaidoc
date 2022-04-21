@@ -2,7 +2,7 @@
 title: node中操作mysql
 description: 在node中使用mysql
 published: 1
-date: 2022-04-21T04:01:04.525Z
+date: 2022-04-21T09:07:04.571Z
 tags: mysql
 editor: markdown
 dateCreated: 2022-04-21T04:01:04.525Z
@@ -32,5 +32,64 @@ const db=mysql.createPool({
 db.query('select 1',(err,results)=>{
 if(err) return console.log('err')
   console.log(results)
+})
+```
+# 使用mysql模块操作mysql数据库
+## 查询数据
+**查询users表中所有数据**
+``` js
+const mysql=require('mysql')
+const db=mysql.createPool({
+      host:'127.0.0.1',
+      user:'root',
+      password:'admin',
+      database:'mydatabase'
+})
+db.query('select * from users',(err,results)=>{
+if(err) return console.log('查询失败！')
+  console.log(results) //返回的是查询结果的数组
+})
+```
+## 插入数据
+**向users表中新增数据，其中username为cwj,password为123456**
+``` js
+const mysql=require('mysql')
+const db=mysql.createPool({
+      host:'127.0.0.1',
+      user:'root',
+      password:'admin',
+      database:'mydatabase'
+})
+//要插入users表中的数据对象
+const user={username:'cwj',password:'123456'}
+//待执行的SQL语句英文？号代表占位符
+const sqlStr=‘insert into users (username,password) values (?,?)’
+//使用数组的形式依次为？占位符指定具体的值
+db.query(sqlStr,[user.name,user.password],(err,results)=>{
+if(err) return console.log(err.message)
+  if(results.affectdRows==1){console.log('插入数据成功！')}
+})
+```
+> 拓展：向表中新增数据时，如果数据对象的每个属性和数据表的字段一一对应，则可以通过如下方式快速插入数据：
+{.is-info}
+
+``` js
+const mysql=require('mysql')
+const db=mysql.createPool({
+      host:'127.0.0.1',
+      user:'root',
+      password:'admin',
+      database:'mydatabase'
+})
+//插入到users表中的数据对象
+const user={username:'cwj',password:'123456'}
+//待执行的SQL语句
+const sqlStr='insert into users set ?'
+//直接将数据对象当作占位符的值
+db.query(sqlStr,user,(err,results)=>{
+if(err) return console.log(err.message)
+  if(results.affectedRows==1){
+  console.log('插入新数据成功！')
+  }
 })
 ```
