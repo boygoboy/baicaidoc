@@ -2,13 +2,14 @@
 title: web开发身份认证机制
 description: web开发身份认证的机制
 published: 1
-date: 2022-04-24T03:46:40.870Z
+date: 2022-04-24T06:13:19.457Z
 tags: session
 editor: markdown
 dateCreated: 2022-04-24T03:46:40.870Z
 ---
 
 # session认证机制
+## 介绍
 1. http协议的无状态性
 客户端的每次http请求都是独立的，连续多个请求之间没有直接的关系，服务器不会主动保留每次的http请求的状态，这里可以通过cookie机制突破http协议的无状态性。
 2. 什么是cookie
@@ -34,3 +35,91 @@ cookie特点：
 + 浏览器：客户端再次发起请求时，通过请求头自动把当前域名下所有可用的cookie发送给服务器
 + 服务端：服务器根据请求头中携带的cookie从内存中查找对应的用户信息，用户的身份认证成功后，服务器针对当前用户生产特定响应内容
 + 服务端：服务器响应把当前用户对应的页面内容响应给浏览器
+## 在express中使用session认证
+1. 安装express-session中间件
+在express项目中，只需要安装express-session中间件，即可在项目中使用session认证：
+``` js
+npm install express-session
+```
+2. 配置express-session
+``` js
+const express=require('express')
+const app=express()
+//导入session中间件
+const session=require('express-session')
+//配置session中间件
+app.use(session({
+   secret:'cwj', //自定义字符串
+   resave:false, //固定写法
+   saveUninitialized:true //固定写法
+}))
+```
+3. 向session中存储数据
+当express-session中间件配置成功后，可通过req.session来访问和使用session对象，来存储用户关键信息：
+``` js
+app.post('/api/login',(req,res)=>{
+if(req.body.username!=='admin'||req.body.password!=='000'){
+ return res.send({status:1,msg:'登录失败！'})
+  req.session.user=req.body
+  req.session.isLogin=true
+  res.send({status:0,msg:'登录成功'})
+}
+})
+```
+4. 从session中取数据
+可以直接从req.session对象上获取之前存储的数据，示例代码如下：
+``` js
+api.get('/api/username',(req,res)=>{
+ if(!req.session.isLogin){
+   return res.send({status:1,msg:'fail'})
+ }
+  res.send({status:0,msg:'success',useaname:req.session.user.username})
+})
+```
+5. 清空session
+调用req.session.destory()函数即可清空服务器保存的session信息
+``` js
+app.post('/api/logout',(req,res)=>{
+req.session.destroy()
+  res.send({
+     status:200,
+     msg:'退出成功！'
+  })
+})
+```
+> 注意：并不好把所有session清除掉只会清除对应客户端session
+{.is-warning}
+
+# jwt认证机制
+## session认证的局限性
+session认证机制需要配合cookie才能实现，由于cookie默认不支持跨域访问，所以当遇到跨域问题时需要做很多额外的配置才能实现跨域session认证
+> 注意：1. 当前端请求后端接口不存在跨域问题的时候，推荐使用session身份认证机制。2. 当前端需要跨域请求后端接口的时候，不推荐使用session身份认证机制，推荐使用jwt认证机制。
+{.is-warning}
+
+## jwt认证机制
+1. 什么是jwt
+目前最流行的跨域认证解决方案
+2. jwt的工作原理
++ 浏览器：客户端登录：提交账号与密码
++ 服务端：验证账号和密码，验证通过后将用户的信息对象经过加密之后生产token字符串
++ 服务端：服务器响应将生成的token发送给客户端
++ 浏览器：将token存储到localStorage或者sessionStorage中
++ 浏览器：客户端再次发起请求时，通过请求头的Authorization字段将token发送给服务器
++ 服务端：服务器把token字符串还原成用户的信息对象
++ 服务端：用户的身份认证成功后，服务器针对当前用户生成特定的响应内容
++ 服务端：服务器响应把当前用户对应的页面内容响应给浏览器
+总结：用户的信息通过token字符串的形式，保存在客户端浏览器中。服务器通过还原token字符串的形式来认证用户的身份
+3. jwt的组成部分
+由三部分组成：Header（头部）、Payload（有效荷载）、Signature（签名）三者之间使用英文'.'分隔，格式如下：
+``` js
+Header.Payload.Signature
+```
+4. 三个组成部分含义
++ Payload部分才是真正的用户信息，它是用户信息经过加密之后生成的字符串
++ Header和Signature是安全性相关的部分，只为保证token的安全性
+5. jwt的使用方式
+客户端收到服务器返回的jwt之后将其存储到localStorage或sessionStorage中，之后客户端每次与服务器通信，要带上JWT的字符串进行身份认证，推荐做法是把jwt放在http请求头的Authorization字段中，格式如下：
+``` js
+Authorization: Bearer <token>
+```
+
