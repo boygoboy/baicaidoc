@@ -2,7 +2,7 @@
 title: web开发身份认证机制
 description: web开发身份认证的机制
 published: 1
-date: 2022-04-24T06:13:19.457Z
+date: 2022-04-24T07:09:41.499Z
 tags: session
 editor: markdown
 dateCreated: 2022-04-24T03:46:40.870Z
@@ -122,4 +122,65 @@ Header.Payload.Signature
 ``` js
 Authorization: Bearer <token>
 ```
+## 在express中使用jwt
+1. 安装jwt相关的包
+``` shell
+npm install jsonwebtoken express-jwt
+```
++ jsonwebtoken用于生产jwt字符串
++ express-jwt用于将jwt字符串解析还原成JSON对象
+2. 导入jwt相关的包
+``` js
+//导入用于生成jwt字符串的包
+const jwt=require('jsonwebtoken')
+//导入用于将客户端发送过来的jwt字符串解析还原成JSON对象的包
+const expressJWT=require('express-jwt')
+```
+3. 定义secret秘钥
+为了保证jwt字符串的安全性，防止jwt字符串在网络传输过程中被破解需要定义一个用于加密和解密的secret秘钥：
++ 当生成jwt字符串的时候需要使用secret密钥对用户的信息进行加密，最终得到加密好的jwt字符串
++ 当把jwt字符串解析还原成JSON对象的时候，需要使用secret密钥进行解密
++ secret密钥的本质就是一个字符串
+4. 在登录成功后生成jwt字符串
+调用jsonwebtoken包提供的sign()方法，将用户的信息加密成jwt字符串，响应给客户端：
+``` js
+app.post('/api/login',(req,res)=>{
+   res.send({
+       status:200,
+       message:'登录成功',
+       token:jwt.sign({username:userinfo.username},secretKey,{expiresIn:'30s'})
+   })
+})
+```
+5. 将jwt字符串还原为JSON对象
+通过express-jwt中间件自动将客户端发送过来的token解析还原成JSON对象：
+``` js
+app.use(expressJWT({secret:secretKey}).unless({path:[/^\/api\//]}))
+```
+> .unless()方法用于指定哪些接口不需要访问权限
+{.is-info}
 
+6. 使用req.user获取用户信息
+``` js
+app.get('/admin/getinfo',(req,res)=>{
+console.log(req.user)
+  res.send({
+      status:200,
+      message:'获取用户信息成功！',
+      data:req.user
+  })
+})
+```
+> 注意：这里通过express-jwt中间件将token解析还原成JSON对象后会自动将user对象挂载到req中
+{.is-warning}
+
+7. 捕获解析jwt失败后产生的错误
+当使用express-jwt解析token字符串时，如果客户端发送过来的token字符串过期或不合法，会产生一个解析失败的错误，影响项目的正常运行，使用express错误中间件可捕获错误并处理。
+``` js
+app.use((err,req,res,next)=>{
+      if(err.name=='UnauthorizedError'){
+      return res.send({status:401,message:'无效token'})
+      }
+      res.send({status:500,message:'未知错误'})
+})
+```
