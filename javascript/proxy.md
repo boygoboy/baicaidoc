@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-25T09:07:27.325Z
+date: 2022-04-25T09:13:44.938Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -203,6 +203,21 @@ if(Reflect.defineProperty(o,'foo','bar')){
 + Reflect.setPrototypeOf()
 + Reflect.set()
 + Reflect.deleteProperty()
-
+### 用一等函数代替操作符
+反射方法提供只有操作符才能完成的操作
++ Reflect.get()：可以替代对象属性访问操作符
++ Reflect.set()：可以替代=赋值操作符
++ Reflect.has()：可以替代in操作符或with()
++ Reflect.deleteProperty()：可以替代delete操作符
++ Reflect.construct()：可以替代new操作符
+### 安全地应用函数
+函数自定义apply属性：
+``` js
+Function.prototype.apply.call(myFunc,thisVal,argumentList)
+```
+使用Reflect.apply:
+``` js
+Reflect.apply(myFunc,thisVal,argumentList)
+```
 
 
