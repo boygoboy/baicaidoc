@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-25T07:27:15.292Z
+date: 2022-04-25T07:54:15.753Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -12,7 +12,7 @@ dateCreated: 2022-04-25T04:01:10.925Z
 ## 代理简述
 代理是对目标对象的抽象，可以通过代理操作目标对象，对目标对象的一些底层操作进行拦截操作相当于门卫的作用。代理同时又独立于目标对象，直接操作目标对象会直接绕过代理所给予的行为。
 ## 代理的操作
-1. 创建空代理
+### 创建空代理
 创建空代理使代理与目标对象进行关联，什么也不会去做。代理使用Proxy构造函数创建接收两个参数：代理对象、处理程序对象。
 ``` js
 const target={
@@ -40,7 +40,7 @@ const target={
  //代理与目标对象不严格相等
   console.log(target===proxy)  //false
 ```
-2. 定义捕获器
+### 定义捕获器
 + 介绍
 使用代理的主要目的就是可以定义捕获器，一个处理程序中可以定义多个捕获器，每个捕获器对应一种基本操作。捕获器的作用是代理操作传播到目标对象之前进行拦截并修改相应的行为。
 + 例子
@@ -73,7 +73,7 @@ console.log(Object.create(proxy)['foo'])  //hello
 > 只有在代理对象上执行这些操作才会触发捕获器
 {.is-warning}
 
-3. 捕获器参数和反射api
+### 捕获器参数和反射api
 + 捕获器参数
 所有捕获器都可以访问相应的参数基于这些参数可以重建捕获器方法的原始行为，例如get()捕获器会接收三个参数：trapTarget目标对象、property要查询的属性、receiver代理对象。
 ``` js
@@ -142,4 +142,43 @@ const handler={
 const proxy=new Proxy(target,handler) 
  console.log(proxy.foo) //bar!
 ```
+### 捕获器不变式
+捕获器不变式因方法不同而异，通常是防止捕获器的定义出现过于反常的行为，例如对象某个属性不可写不可配置，当捕获器返回一个与该属性不同的值时会报错
+``` js
+const target={}
+Object.defineProperty(target,'foo',{
+configurable:false,
+writable:false,
+  value:'bar'
+})
+const handler={
+  get(){
+    return 'tt'
+  }
+}
+const proxy=new Proxy(target,proxy)
+console.log(proxy.foo)  //TypeError
+```
+### 可撤销代理
+通过new Proxy()创建的普通代理与目标对象的联系在生命周期内一直持续，用Proxy.revocable()方法创建出来的代理可以撤销代理与目标对象联系，并且不可逆。
+``` js
+const target={foo:'bar'}
+const handler={
+    get(){
+     return 'tt'
+    }
+}
+const {proxy,revoke}=Proxy.revocable(target,handler)
+console.log(proxy.foo) //bar
+revoke()
+console.log(proxy.foo) //TypeError
+```
+## 实用反射api
+### 反射api与对象api
+实用反射api需要记住：
++ 反射api不限于捕获处理程序
++ 大多数反射api方法在Object类型上有对应的方法
+通常Object上的方法适用于通用程序，而反射方法适用于细粒度的对象控制与操作
+
+
 
