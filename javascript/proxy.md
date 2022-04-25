@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-25T04:01:10.925Z
+date: 2022-04-25T07:16:46.785Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -66,4 +66,56 @@ console.log(target['foo']) //bar
 console.log(proxy['foo'])  //hello
 ```
 （3）进行Object.create(proxy)[property]操作
+``` js
+console.log(Object.create(target)['foo']) //bar
+console.log(Object.create(proxy)['foo'])  //hello
+```
+> 只有在代理对象上执行这些操作才会触发捕获器
+{.is-warning}
+
+3. 捕获器参数和反射api
++ 捕获器参数
+所有捕获器都可以访问相应的参数基于这些参数可以重建捕获器方法的原始行为，例如get()捕获器会接收三个参数：trapTarget目标对象、property要查询的属性、receiver代理对象。
+``` js
+const target={foo:'bar'}
+const handler={
+get(trapTarget,property,receiver){
+   console.log(trapTarget==target)
+   console.log(property)
+   console.log(receiver==proxy)
+}
+}
+const proxy=new Proxy(target,handler)
+proxy.foo
+//true
+//foo
+//true
+```
+利用这些参数可以重建捕获器方法的原始行为
+``` js
+const target={foo:'bar'}
+const handler={
+get(trapTarget,property,receiver){
+  return trapTarget[property]
+}
+}
+const proxy=new Proxy(target,handler)
+proxy.foo //bar
+```
++ 反射api
+大多数情况通过调用全局Reflect对象上（封装了原始行为）的反射api方法来轻松进行重建
+``` js
+const target={foo:'bar'}
+const handler={
+   get(){
+      return Reflect.get(..arguments)
+   }
+}
+//简洁写法
+const handler={
+  get:Reflect.get
+}
+const proxy=new Proxy(target,handler)
+console.log(proxy.foo) //bar
+```
 
