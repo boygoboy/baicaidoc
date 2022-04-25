@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-25T07:16:46.785Z
+date: 2022-04-25T07:27:15.292Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -117,5 +117,29 @@ const handler={
 }
 const proxy=new Proxy(target,handler)
 console.log(proxy.foo) //bar
+```
+创建一个可以捕获所有方法，然后把每个方法转发给对应反射api的空代理：
+``` js
+const target={foo:'bar'}
+const proxy=new Proxy(target,Reflect)
+console.log(proxy.foo) //bar
+```
+反射api为开发者准备好样板代码可以用最少的代码修改捕获的方法
+``` js
+const target={
+    foo:'bar',
+    tool:'img'
+}
+const handler={
+     get(trapTarget,property,receiver){
+      let desc=''
+      if(property=='foo'){
+        desc='!'      
+      }
+       return Reflect.get(...arguments)+desc
+     }
+}
+const proxy=new Proxy(target,handler) 
+ console.log(proxy.foo) //bar!
 ```
 
