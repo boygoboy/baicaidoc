@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-25T09:13:44.938Z
+date: 2022-04-25T09:31:47.352Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -218,6 +218,29 @@ Function.prototype.apply.call(myFunc,thisVal,argumentList)
 使用Reflect.apply:
 ``` js
 Reflect.apply(myFunc,thisVal,argumentList)
+```
+### 代理另一个代理
+代理还可以创建一个代理去代理另一个代理，相当于在一个对象上构建多个拦截网：
+``` js
+const target={
+     foo:'bar'
+}
+const firstProxy=new Proxy(target,{
+   get(){
+     console.log('first proxy')
+     return Reflect.get(...arguments)
+   }
+})
+const secondProxy=new Proxy(firstproxy,{
+get(){
+console.log('second proxy')
+  return Reflect.get(...arguments)
+}
+})
+console.log(secondProxy.foo)
+//second proxy
+//first proxy
+//bar
 ```
 
 
