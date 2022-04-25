@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-25T07:54:15.753Z
+date: 2022-04-25T09:07:27.325Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -179,6 +179,30 @@ console.log(proxy.foo) //TypeError
 + 反射api不限于捕获处理程序
 + 大多数反射api方法在Object类型上有对应的方法
 通常Object上的方法适用于通用程序，而反射方法适用于细粒度的对象控制与操作
+### 状态标记
+反射方法返回的布尔值称作状态标记，状态标记比返回修改后的对象或者抛出错误的反射api方法更有用，例如
+``` js
+const o={}
+try{
+  Object.defineProperty(o,'foo','bar')
+  console.log('success')
+}catch(e){
+ console.log('fail')
+}
+//使用状态标记优化
+const o={}
+if(Reflect.defineProperty(o,'foo','bar')){
+  console.log('success')
+}else{
+  console.log('fail')
+}
+```
+**以下反射方法提供状态标记**
++ Reflect.defineProperty()
++ Reflect.preventExtensions()
++ Reflect.setPrototypeOf()
++ Reflect.set()
++ Reflect.deleteProperty()
 
 
 
