@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-25T09:31:47.352Z
+date: 2022-04-26T01:13:37.607Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -241,6 +241,39 @@ console.log(secondProxy.foo)
 //second proxy
 //first proxy
 //bar
+```
+## 代理的问题与不足
+### 代理中的this
+代理中的this指向自己，所以代理某些对象可能存在问题，比如WeakMap保存私有变量
+``` js
+const wm=new WeakMap()
+class User{
+    constructor(userId){
+       wm.set(this,userId)
+    }
+  set id(){
+      wm.set(this,userId)
+  }
+  get id(){
+      return wm.get(this)
+  }
+}
+//由于这个实现依赖于实例对象标识，使用代理可能出现问题：
+const user=new User(123)
+console.log(user.id) //123
+const userInstanceProxy=new Proxy(user,{})
+console.log(userIntanceProxy.id)  //undefined
+```
+可以把代理User实例改为代理User类本身，然后创建代理的实例就可以访问WeakMap的键了
+``` js
+const UserClassProxy=new Proxy(user,{})
+const proxyUser=new UserClassProxy(456)
+console.log(proxyUser.id) //456
+```
+### 代理与内部槽位
+某些内置类型可能会依赖代理无法控制的机制导致代理上调用某些方法会出错，比如Date类型的方法依赖this值上的内部槽位[[NumberDate]]代理上不存在这个内部槽位，且这些方法不能通过get()、set()方法操作因此代理进行拦截就会报错
+``` js
+
 ```
 
 
