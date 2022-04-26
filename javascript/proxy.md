@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-26T07:09:25.608Z
+date: 2022-04-26T07:22:50.592Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -335,6 +335,31 @@ proxy.foo='bar' //set
 5. 捕获器不变式
 + 如果target.property不可写且不可配置，则不能修改目标属性的值
 + 如果target.property不可配置且set特性为undefined，则不能修改目标属性的值
-
+### has()
+1. 描述
+has()捕获器会在in操作符中被调用，对应的反射api方法为Reflect.has()
+``` js
+const myTarget={}
+const proxy=new Proxy(myTarget,{
+    has(target,property){
+    console.log('has')
+      return Reflect.has(...arguments)
+    }
+})
+'foo' in proxy
+```
+2. 返回值
+has()必须返回布尔值，表示属性是否存在，返回非布尔值会被转化为布尔值
+3. 拦截的操作
++ property in proxy
++ property in Object.create(proxy)
++ with(proxy){(property)}
++ Reflect.has(proxy,property)
+3. 捕获器处理程序参数
++ target：目标对象
++ property：引用的目标对象上的字符串键属性
+4. 捕获器不变式
++ 如果target.property存在且不可配置，则处理程序必须返回true
++ 如果target.propsrty存在且目标对象不可拓展，则处理程序必须返回true。
 
 
