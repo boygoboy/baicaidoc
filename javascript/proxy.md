@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-26T09:22:26.302Z
+date: 2022-04-26T09:34:45.567Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -400,3 +400,17 @@ const proxy=new Proxy(myTarget,{
 })
 Object.getOwnPropertyDescriptor(proxy,'foo')  //getOwnPropertyDescriptor
 ```
+2. 返回值
+getOwnPropertyDescriptor()必须返回对象，或者属性不存在时返回undefined
+3. 拦截的操作
++ Object.getOwnPropertyDescriptor(proxy,property)
++ Reflect.getOwnPropertyDescriptor(proxy,property)
+4. 捕获器处理程序参数
++ target:目标对象
++ property：引用目标对象上的字符串键属性
+5. 捕获器不变式
+自有的target.property特征(A)对应处理程序返回值(B)如下：
++ A:存在且不可配置，B:返回属性存在的对象
++ A：存在且target不可拓展，B:返回一个标识该属性存在的对象
++ A:不存在且target不可拓展，B:返回undefined标识该属性不存在
++ A:target.property不存在，B:不能返回表示该属性可配置的对象
