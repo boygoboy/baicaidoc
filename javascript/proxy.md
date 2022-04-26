@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-26T06:07:56.388Z
+date: 2022-04-26T07:09:25.608Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -327,5 +327,14 @@ proxy.foo='bar' //set
 + proxy[property]=value
 + Object.create(proxy)[property]=value
 + Reflect.set(proxy,property,value,receiver)
+4. 捕获器处理程序参数
++ target：目标对象
++ property：引用的目标对象上的字符串键属性
++ value:要赋给属性的值
++ receiver：接收最初赋值的对象
+5. 捕获器不变式
++ 如果target.property不可写且不可配置，则不能修改目标属性的值
++ 如果target.property不可配置且set特性为undefined，则不能修改目标属性的值
+
 
 
