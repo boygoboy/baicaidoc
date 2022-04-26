@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-26T07:22:50.592Z
+date: 2022-04-26T09:13:27.562Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -361,5 +361,31 @@ has()必须返回布尔值，表示属性是否存在，返回非布尔值会被
 4. 捕获器不变式
 + 如果target.property存在且不可配置，则处理程序必须返回true
 + 如果target.propsrty存在且目标对象不可拓展，则处理程序必须返回true。
+### defineProperty()
+1. 描述
+defineProperty()捕获器会在Object.defineProperty()中被调用。对应的反射api方法为Reflect.defineProperty()
+``` js
+const myTarget={}
+const proxy=new Proxy(myTarget,{
+    defineProperty(target,property,descriptor){
+      console.log('defineProperty')
+      return Reflect.defineProperty(...arguments)
+    }
+})
+Object.defineProperty(proxy,'foo',{value:'bar'}) //defineProperty
+```
+2. 返回值
+defineProperty()必须返回布尔值，表示是否成功定义，返回非布尔值会被转型为布尔值
+3. 拦截的操作
++ Object.defineProperty(proxy,property,descriptor)
++ Reflect.defineProperty(proxy,property,descriptor)
+4. 捕获器处理程序参数
++ target：目标对象
++ property：引用的目标对象上的字符串键属性
++ descriptor：包含可选的enumerable、configurable、writable、value、get和set定义的对象
+5. 捕获器不变式
++ 如果对象不可拓展，则无法定义属性
++ 如果目标对象有一个可配置的属性，则不能添加同名的不可配置属性
++ 如果目标对象有一个不可配置的属性，则不能添加同名的可配置属性
 
 
