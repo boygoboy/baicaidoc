@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-26T09:13:27.562Z
+date: 2022-04-26T09:22:26.302Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -387,5 +387,16 @@ defineProperty()必须返回布尔值，表示是否成功定义，返回非布�
 + 如果对象不可拓展，则无法定义属性
 + 如果目标对象有一个可配置的属性，则不能添加同名的不可配置属性
 + 如果目标对象有一个不可配置的属性，则不能添加同名的可配置属性
-
-
+### getOwnPropertyDescriptor()
+1. 描述
+getOwnPropertyDescriptor()捕获器会在Object.getOwnPropertyDescriptor()中被调用，对应的反射api为Reflect.getOwnPropetyDescriptor()
+``` js
+const myTarget={}
+const proxy=new Proxy(myTarget,{
+   getOwnPropertyDescriptor(target,property){
+      console.log('getOwnPropertyDescriptor')
+      Reflect.getOwnPropertyDescriptor(...arguments)
+   }
+})
+Object.getOwnPropertyDescriptor(proxy,'foo')  //getOwnPropertyDescriptor
+```
