@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-26T01:31:59.499Z
+date: 2022-04-26T06:07:56.388Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -280,7 +280,7 @@ proxy.getDate() //报错
 ```
 ## 代理捕获器13种方法
 ### get()
-+ 描述
+1. 描述
 get()捕获器在获取属性值的操作中被调用，对应的反射api方法为Reflect.get()
 ``` js
 const myTarget={}
@@ -292,20 +292,40 @@ const proxy=new Proxy(myTarget,{
 })
 proxy.foo //get
 ```
-+ 返回值
+2. 返回值
 返回值无限制
-+ 拦截的操作
-1. proxy.property
-2. proxy[property]
-3. Object.create(proxy)[property]
-4. Reflect.get(proxy,property,receiver)
-+ 捕获器处理程序对象
-1. target:目标对象
-2. property:引用的目标对象上的字符串属性
-3. receiver：代理对象或继承代理对象的对象
-+ 捕获器不变式
-1. target.property不可写不可配置，则处理程序返回的值必须与target.property匹配
-2. target.property不可配置且get特性为undefined处理程序的返回值必须是undefined
+3. 拦截的操作
++ proxy.property
++ proxy[property]
++ Object.create(proxy)[property]
++ Reflect.get(proxy,property,receiver)
+4. 捕获器处理程序对象
++ target:目标对象
++ property:引用的目标对象上的字符串属性
++ receiver：代理对象或继承代理对象的对象
+5. 捕获器不变式
++ target.property不可写不可配置，则处理程序返回的值必须与target.property匹配
++ target.property不可配置且get特性为undefined处理程序的返回值必须是undefined
 
+### set()
+1. 描述
+set()捕获器会在设置属性值的操作中被调用，对应的反射api方法为Reflect.set()
+``` js
+const myTarget={}
+const proxy=new Proxy(myTarget,{
+   set(target,property,value,receiver){
+       console.log('set()')
+     return Reflect.set(...arguments)
+   }
+})
+proxy.foo='bar' //set
+```
+2. 返回值
+返回true表示成功，返回false表示失败，严格模式下会抛出错误
+3. 拦截的操作
++ proxy.property=value
++ proxy[property]=value
++ Object.create(proxy)[property]=value
++ Reflect.set(proxy,property,value,receiver)
 
 
