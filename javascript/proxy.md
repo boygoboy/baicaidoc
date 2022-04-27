@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-27T01:53:11.698Z
+date: 2022-04-27T02:24:11.792Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -539,4 +539,42 @@ const proxy=new Proxy(myTarget,{
 })
      Object.preventExtensions(proxy) // preventExtensions
 ```
-
+2. 返回值
+preventExtensions()必须返回布尔值，表示target是否已经不可拓展，不可拓展返回true,可拓展返回false,非布尔值转化为布尔值
+3. 拦截的操作
++ Object.preventExtensions(proxy)
++ Reflect.preventExtensions(proxy)
+4. 捕获器处理程序参数
++ target:目标对象
+5. 捕获器不变式
+Object.isExtensions(proxy)是false，则处理程序必须返回true
+## apply()
+1. 描述
+apply()捕获器会在调用函数时中被调用，对应反射api方法为Reflect.apply()
+``` js
+const myTarget=()=>{}
+const proxy=new Proxy(myTarget,{
+   apply(target,thisArg,...arguments){
+      console.log('apply')
+     return Reflect.apply(...arguments)
+   }
+})
+proxy()
+//apply
+```
+2. 返回值
+无限制
+3. 拦截的操作
++ proxy(...argumentsList)
++ Function.prototype.apply(thisArg,...argumentsList)
++ Function.prototype.call(thisArg,...argumentsList)
++ Reflect.apply(target,thisArgument,argumentsList)
+4. 捕获器处理程序参数
++ target:目标对象
++ thisArg:调用函数时的this对象
++ argumentsList:调用函数时的参数列表
+5. 捕获器不变式
+target必须是一个函数对象
+## construct()
+1. 描述
+construct()捕获器会在new
