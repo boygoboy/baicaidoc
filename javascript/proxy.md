@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-27T02:24:11.792Z
+date: 2022-04-27T03:15:32.616Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -577,4 +577,25 @@ proxy()
 target必须是一个函数对象
 ## construct()
 1. 描述
-construct()捕获器会在new
+construct()捕获器会在new操作符中被调用。对应的反射api方法为Reflect.construct()
+``` js
+const myTarget=function(){}
+const proxy=new Proxy(myTarget,{
+     construct(target,argumentsList,newTarget){
+       console.log('construct')
+       return Reflect.construct(...arguments)
+     }
+})
+new proxy //construct
+```
+2. 返回值
+construct()必须返回一个对象
+3. 拦截的操作
++ new proxy(...argumentsList)
++ Reflect.construct(target,argumentsList,newTarget)
+4. 捕获器处理程序参数
++ target:目标构造函数
++ argumentsList:传给目标构造函数的参数列表
++ newTarget:最初被调用的构造函数
+5. 捕获器不变式
+target必须可以用作构造函数
