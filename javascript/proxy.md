@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-27T06:12:03.636Z
+date: 2022-04-27T06:29:32.442Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -648,4 +648,58 @@ console.log(proxy.baz) //3
 console.log('foo' in proxy)  //false
 console.log('bar' in proxy)  //false
 console.log('baz' in proxy)  //true
+```
+## 属性验证
+所有赋值操作都会触发set()捕获器，可以根据赋值情况决定是否允许赋值
+``` js
+const target={num:0}
+const proxy=new Proxy(target,{
+      set(target,property,value){
+         if(typeof value !=='number'){
+            return false
+         }else{
+          return Reflect.set(...arguments)
+         }
+      }
+})
+proxy.num=1 
+console.log(target.num) //1
+proxy.num='2'
+console.log(target.num) //1
+```
+## 函数与构造函数参数验证
+对函数和构造函数的参数进行审查，方法如下：
+``` js
+function median(...nums){
+    return nums.sort()[Math.floor(nums.length/2)]
+}
+const proxy=new Proxy(mdian,{
+      apply(target,thisArg,argumentsList){
+         for(const arg of argumentsList){
+           if(typeof arg !=='number'){
+             throw 'error'
+           }
+           return Reflect.apply(...arguments)
+         }
+      }
+})
+```
+**要求实例化时必须给构造函数传参**
+``` js
+class User{
+    constructor(id){
+       this.id_=id
+    }
+}
+const proxy=new Proxy(User,{
+     construct(target,argumentsList,newTarget){
+          if(argumentsList[0]===undefined){
+             throw 'error'
+          }else{
+           return Reflect.construct(...arguments)
+          }
+     }
+})
+new proxy(1)
+new proxy() //报错
 ```
