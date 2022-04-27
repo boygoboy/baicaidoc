@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-27T06:47:55.108Z
+date: 2022-04-27T06:53:59.652Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -704,7 +704,7 @@ new proxy(1)
 new proxy() //报错
 ```
 ## 数据绑定与可观察对象
-让被代理的类绑定到一个全局实例集合，让所有创建的实例都被添加到集合中
+**让被代理的类绑定到一个全局实例集合，让所有创建的实例都被添加到集合中**
 ``` js
 const userList=[]
 class User{
@@ -722,4 +722,22 @@ const proxy=new Proxy(User,{
  new proxy('j')
  new proxy('k')
 console.log(userList) //[User{},User{}]
+```
+**把集合绑定到一个事件分派程序，每次插入新实例发送新消息**
+``` js
+const userList=[]
+function emit(newValue){
+  console.log(newValue)
+}
+const proxy=new Proxy(userList,{
+      set(target,property,value,receiver){
+         const result=Reflect.set(...arguments)
+         if(result){
+          emit(Reflect.get(target,property,receiver))
+         }
+        return result
+      }
+})
+proxy.push('j')  //j
+proxy.push('k')  //k
 ```
