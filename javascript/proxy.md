@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-27T06:29:32.442Z
+date: 2022-04-27T06:47:55.108Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -702,4 +702,24 @@ const proxy=new Proxy(User,{
 })
 new proxy(1)
 new proxy() //报错
+```
+## 数据绑定与可观察对象
+让被代理的类绑定到一个全局实例集合，让所有创建的实例都被添加到集合中
+``` js
+const userList=[]
+class User{
+    construct(name){
+       this.name_=name
+    }
+}
+const proxy=new Proxy(User,{
+     construct(){
+       const newUser=Reflect.construct(...arguments)
+       userList.push(newUser)
+       return newUser
+     }
+})
+ new proxy('j')
+ new proxy('k')
+console.log(userList) //[User{},User{}]
 ```
