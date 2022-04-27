@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-27T06:53:59.652Z
+date: 2022-04-27T06:56:00.333Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -741,3 +741,5 @@ const proxy=new Proxy(userList,{
 proxy.push('j')  //j
 proxy.push('k')  //k
 ```
+# 总结
+代理是对象的门卫，可以进行对象常用方法的拦截处理，实际应用中可以跟踪属性访问、隐藏属性、阻止修改或删除属性、函数参数验证、构造函数参数验证、数据绑定等。
