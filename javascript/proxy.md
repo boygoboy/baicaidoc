@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-27T01:43:20.589Z
+date: 2022-04-27T01:53:11.698Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -517,5 +517,26 @@ const proxy=new Proxy(myTarget,{
     Object.isExtensible(proxy) // isExtensible
 ```
 2. 返回值
-
+isExtensible()必须返回布尔值，表示target是否可拓展。返回非布尔值会被转型为布尔值
+3. 拦截的操作
++ Object.isExtensible(proxy)
++ Reflect.isExtensible(proxy)
+4. 捕获器处理程序参数
++ target:目标对象
+5. 捕获器不变式
++ target可拓展，处理程序必须返回true
++ target不可拓展，则处理程序必须返回false
+## preventExtensions()
+1. 描述
+preventExtensions()捕获器会在Object.preventExtensions()中被调用。对应的反射api方法为Reflect.preventExtensions()
+``` js
+const myTarget={}
+const proxy=new Proxy(myTarget,{
+        preventExtensions(target){
+             console.log('preventExtensions')
+          return Reflect.preventExtensions(...arguments)
+        }
+})
+     Object.preventExtensions(proxy) // preventExtensions
+```
 
