@@ -2,7 +2,7 @@
 title: js中的代理与反射
 description: 代理与反射的介绍
 published: 1
-date: 2022-04-27T03:15:32.616Z
+date: 2022-04-27T05:48:10.992Z
 tags: proxy
 editor: markdown
 dateCreated: 2022-04-25T04:01:10.925Z
@@ -599,3 +599,21 @@ construct()必须返回一个对象
 + newTarget:最初被调用的构造函数
 5. 捕获器不变式
 target必须可以用作构造函数
+# 代理的实际应用
+## 跟踪属性访问
+通过捕获get、set和has等操作，可以获取对象属性被访问查询记录，达到监控的作用
+``` js
+const user={name:'jack'}
+const proxy=new Proxy(user,{
+      get(target,property,receiver){
+        console.log(`get ${property}`)
+        return Reflect.get(...arguments)
+      }
+      set(target,property,value,receivr){
+           console.log(`set ${property}=${value}`)
+           return Reflect.set(...arguments)
+        }
+})
+ proxy.name //get name
+ proxy.age=27 // set age=27
+```
