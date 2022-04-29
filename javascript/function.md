@@ -2,7 +2,7 @@
 title: js中的函数
 description: 函数使用
 published: 1
-date: 2022-04-29T03:33:00.754Z
+date: 2022-04-29T03:46:50.076Z
 tags: function
 editor: markdown
 dateCreated: 2022-04-29T01:28:58.641Z
@@ -271,4 +271,20 @@ let getSum=(...values)=>{
    return values.reduce((x,y)=>x+y,0)
 }
 console.log(getSum(1,2,3))
+```
+# 函数声明与函数表达式
+函数声明与函数表达式区别
++ js代码执行之前会先读取函数声明并在执行上下文中生成函数定义
++ 函数表达式必须等到代码执行到那一行才会在执行上下文中生成函数定义
+因此函数表达式不能像函数声明那样调用否则报错
+``` js
+console.log(sum(10,10))
+function sum(num1,num2){
+  return num1+num2
+}
+//报错
+console.log(sum(10,10))
+let sum=function(num1,num2){
+  return num1+num2
+}
 ```
