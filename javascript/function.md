@@ -2,7 +2,7 @@
 title: js中的函数
 description: 函数使用
 published: 1
-date: 2022-04-29T01:28:58.641Z
+date: 2022-04-29T01:39:01.609Z
 tags: function
 editor: markdown
 dateCreated: 2022-04-29T01:28:58.641Z
@@ -66,5 +66,17 @@ sum=null
 console.log(anothersum(10,10))  //20
 ```
 anothersum被赋值为sum后指向函数的指针可以调用函数，当sum被赋值为null后切断了与函数的联系
+## 函数的名称属性
+函数对外暴露一个只读的name属性，该属性保存函数标识符或者是一个字符串化的变量名，如函数没有名称显示空字符串，如是Function构造函数创建的则会标识成'anonymous'
+``` js
+function foo(){}
+let bar=function(){}
+let baz=()=>{}
+console.log(foo.name)  //foo
+console.log(bar.name)  //bar
+console.log(baz.name)  //baz
+console.log((()=>{}).name) //空字符串
+console.log((new Function()).name) //anonymous
+```
 
 
