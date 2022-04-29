@@ -2,7 +2,7 @@
 title: js中的函数
 description: 函数使用
 published: 1
-date: 2022-04-29T08:59:37.203Z
+date: 2022-04-29T09:11:03.505Z
 tags: function
 editor: markdown
 dateCreated: 2022-04-29T01:28:58.641Z
@@ -518,4 +518,30 @@ function sayColor(){
 let objectSayColor=sayColor.bind(o)
 objectSayColor() //blue
 ```
-
+# 函数表达式
++ 描述
+函数表达式像一个普通变量定义和赋值，即创建一个函数再把它赋值给一个变量这样创建的函数叫做匿名函数（function后面没有标识符）
++ 表达式的应用
+``` js
+//有问题做法
+if(flag){
+    function sayHi(){
+     console.log('hi')
+    }
+}else{
+ function sayHi(){
+     console.log('hello')
+    }
+}
+//正确做法
+let sayHi
+if(flag){
+    sayHi=function (){
+     console.log('hi')
+    }
+}else{
+  sayHi=function(){
+     console.log('hello')
+    }
+}
+```
