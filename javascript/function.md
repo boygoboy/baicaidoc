@@ -2,7 +2,7 @@
 title: js中的函数
 description: 函数使用
 published: 1
-date: 2022-04-29T03:46:50.076Z
+date: 2022-04-29T03:50:59.776Z
 tags: function
 editor: markdown
 dateCreated: 2022-04-29T01:28:58.641Z
@@ -288,3 +288,5 @@ let sum=function(num1,num2){
   return num1+num2
 }
 ```
+# 函数作为值
+不仅可以把函数作为参数传给另一个
