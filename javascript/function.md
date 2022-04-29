@@ -2,7 +2,7 @@
 title: js中的函数
 description: 函数使用
 published: 1
-date: 2022-04-29T03:50:59.776Z
+date: 2022-04-29T05:40:25.960Z
 tags: function
 editor: markdown
 dateCreated: 2022-04-29T01:28:58.641Z
@@ -289,4 +289,42 @@ let sum=function(num1,num2){
 }
 ```
 # 函数作为值
-不仅可以把函数作为参数传给另一个
+不仅可以把函数作为参数传给另一个函数也可在一个函数中返回另一个函数
+```js
+function callSomeFunction(someFunction,someArgument){
+   return someFunction(someArgument)
+}
+function add(num){
+return num+10
+}
+let result1=callSomeFunction(add,10)
+console.log(result1) //20
+```
+> 如果是访问函数而不是调用函数，那必须不带括号
+{.is-warning}
+
+从一个函数返回另一个函数用处很大比如利用sort()方法对对象中某个属性排序
+``` js
+function createComparisonFunction(propertyName){
+        return function(obj1,obj2){
+           let value1=obj1[propertyName]
+           let value2=obj2[propertyName]
+           if(value1<value2){
+            return -1
+           }else if(value1>value2){
+             return 1
+           }else{
+           return 0
+           }
+        }
+}
+let data=[
+  {name:'a',age:10},
+  {name:'b',age:5}
+]
+data.sort(createComparisonFunction('age'))
+console.log(data[0].age) //5
+```
+> 拓展：这里返回的内部函数调用了外部函数propertyName变量，这种称为函数的闭包
+{.is-info}
+
