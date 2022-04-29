@@ -2,7 +2,7 @@
 title: js中的函数
 description: 函数使用
 published: 1
-date: 2022-04-29T05:40:25.960Z
+date: 2022-04-29T06:42:45.372Z
 tags: function
 editor: markdown
 dateCreated: 2022-04-29T01:28:58.641Z
@@ -326,5 +326,125 @@ data.sort(createComparisonFunction('age'))
 console.log(data[0].age) //5
 ```
 > 拓展：这里返回的内部函数调用了外部函数propertyName变量，这种称为函数的闭包
+{.is-info}
+
+# 函数内部
+## arguments
++ arguments对象是一个类数组包含调用参数时传入的所有参数
++ 只有以function关键字定义函数时才会有
++ arguments对象还有一个callee属性,用于指向arguments对象所在函数的指针
+比如经典的阶乘函数
+``` js
+//优化前
+function factorial(num){
+if(mum<=1){
+   return 1
+}else{
+    return num*factorial(num-1)
+}
+}
+//优化后
+function factorial(num){
+     if(num<=1){
+       return 1
+     }else{
+       return num*arguments.callee(num-1)
+     }
+}
+let trueFactorial=factorial
+factorial=function(){
+      return 0
+}
+console.log(trueFactorial(5)) //120
+console.log(factorial(5)) //0
+```
+上述如果用优化前的阶乘函数调用trueFactorial(5)输出的将会是0
+## 函数中的this问题
++ 标准函数的this
+this引用的是把函数当成方法调用的上下文对象，这时通常称其为this值，在网页全局上下文调用函数时，this指向windows
+``` js
+window.color='red'
+let o={
+   color:'blue'
+}
+function sayColor(){
+ console.log(this.color)
+}
+sayColor() //red
+o.sayColor=sayColor
+o.sayColor() //blue
+```
++ 箭头函数的this
+箭头函数中this引用的是定义箭头函数的上下文
+``` js
+window.color='red'
+let o={
+ color:'blue'
+}
+let sayColor=()=>{console.log(this.color)}
+sayColor() //red
+o.sayColor=sayColor
+o.sayColor() //red
+```
+这次调用o.sayColor()输出的任然是red因为这次用箭头函数定义的，this引用的是定义箭头函数的上下文即为window
+> 箭头函数this实际应用：在回调函数或者定时器中使用可以保留定义箭头函数的上下文this
+{.is-info}
+
+``` js
+function king(){
+   this.name='jack'
+  setTimeout(()=>{console.log(this.name)},1000)
+}
+function queen(){
+   this.name='jack'
+  setTimeout(function(){console.log(this.name)},1000)
+}
+new king() //jack
+new queen() //undefined
+```
+这里new queen()过后输出undefined是因为定时器中的函数为普通函数，其this指向并非是queen
+## caller
++ 描述
+这个属性引用的是调用当前函数的函数，如果在全局作用域中调用的是null
+``` js
+function outer(){
+  inner()
+}
+function inner(){
+   console.log(inner.caller)
+}
+outer()
+```
+> 这里代码会输出outer()函数的源代码，因为inner.caller指向了outer()
+{.is-info}
+
+降低代码的耦合度可以使用如下方式
+``` js
+function outer(){
+  inner()
+}
+function inner(){
+   console.log(arguments.callee.caller)
+}
+outer()
+```
+> 严格模式下不能使用此方式会报错，也不能给caller属性赋值
+{.is-warning}
+
+## new.target
++ 描述
+函数还可以作为构造函数实例化为一个新对象，也可作为普通函数被调用。new.target属性可以检测函数是否用new关键字调用的：函数正常调用则new.target值为undefined，如果new关键字调用则new.target将引用被调用的构造函数
++ 应用
+``` js
+function King(){
+if(!new.target){
+ throw 'error'
+}
+  console.log('success')
+}
+new King()
+King()
+```
+> 这里只允许函数通过new被调用
 {.is-info}
 
