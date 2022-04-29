@@ -2,7 +2,7 @@
 title: js中的函数
 description: 函数使用
 published: 1
-date: 2022-04-29T07:54:41.268Z
+date: 2022-04-29T08:58:29.868Z
 tags: function
 editor: markdown
 dateCreated: 2022-04-29T01:28:58.641Z
@@ -461,4 +461,61 @@ console.log(sayAge.length)  //0
 ```
 ## prototype属性
 + 描述
-该属性时保存引用类型所有实例方法的地方意味着toString()、valueOf()方法都保存在prototype上,prototype不可枚举不能使用for-in
+该属性时保存引用类型所有实例方法的地方意味着toString()、valueOf()方法都保存在prototype上,prototype不可枚举不能使用for-in循环
+## 方法
+函数还有两个方法：apply()和call()方法，这两个方法都会以指定的this值来调用函数，会设置调用函数时函数体内的this对象的值
++ apply()
+该方法接收两个参数：函数内this的值和一个参数数组，第二个参数可以是Array的实例也可以是arguments对象
+``` js
+function sum(num1,num2){
+   return num1+num2
+}
+function callSum1(num1,num2){
+  return sum.apply(this,arguments)
+}
+console.log(callSum1(10,10)) //20
+```
+调用callSum1()时将函数体内的this传给sum，此时在全局作用域中调用callSum1，this指向window
+> 注意：在严格模式下调用函数时如果没有指定上下文对象，this值不会指向window，除非使用apply()或call()把函数指定给一个对象，否则this的值为undefined。
+{.is-warning}
+
++ call()
+call()方法的作用一样，第一个传递的参数是this，而剩下的要传给被调用函数的参数则是逐个传递的即通过call()向函数传参必须将参数一个个列出来。
+``` js
+function sum(num1,num2){
+    return num1+num2
+}
+function callSum(num1,num2){
+   return sum.call(this,num1,num2)
+}
+console.log(callSum(10,10)) //20
+```
+> apply()和call()方法实际的应用是控制函数调用上下文即函数体内this值的能力
+{.is-info}
+
+``` js
+window.color='red'
+let o={
+  color:'blue'
+}
+function sayColor(){
+      console.log(this.color)
+}
+sayColor.call(this) //red
+sayColor.call(window) //red
+sayColor.call(o) //blue
+```
++ bind()
+bind()方法会创建一个新的函数实例，其this值会被绑定到传给bind()的对象：
+``` js
+window.color='red'
+let o={
+   color:'blue'
+}'
+function sayColor(){
+       console.log(this.color)
+}
+let objectSayColor=sayColor.bind(o)
+objectSayColor() //blue
+```
+
