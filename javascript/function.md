@@ -2,7 +2,7 @@
 title: js中的函数
 description: 函数使用
 published: 1
-date: 2022-04-29T09:11:03.505Z
+date: 2022-04-29T09:23:33.327Z
 tags: function
 editor: markdown
 dateCreated: 2022-04-29T01:28:58.641Z
@@ -544,4 +544,37 @@ if(flag){
      console.log('hello')
     }
 }
+```
+# 递归
++ 描述
+递归函数的形式是一个函数通过名称调用自己，例如
+``` js
+function factorial(num){
+   if(num<=1){
+     return 1
+   }else{
+     num*factorial(num-1)
+   }
+}
+```
++ arguments.callee递归
+防止递归函数名称与递归函数切断联系
+``` js
+function factorial(num){
+   if(num<=1){
+     return 1
+   }else{
+     num*arguments.callee(num-1)
+   }
+}
+```
++ 严格模式下使用递归
+``` js
+const factorial=(function f(num){
+      if(num<=1){
+         return 1
+      }else{
+       return num*f(num-1)
+      }
+})
 ```
