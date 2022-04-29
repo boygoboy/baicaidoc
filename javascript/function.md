@@ -2,7 +2,7 @@
 title: js中的函数
 description: 函数使用
 published: 1
-date: 2022-04-29T08:58:29.868Z
+date: 2022-04-29T08:59:37.203Z
 tags: function
 editor: markdown
 dateCreated: 2022-04-29T01:28:58.641Z
