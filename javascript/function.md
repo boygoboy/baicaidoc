@@ -2,7 +2,7 @@
 title: js中的函数
 description: 函数使用
 published: 1
-date: 2022-04-29T06:42:45.372Z
+date: 2022-04-29T07:54:41.268Z
 tags: function
 editor: markdown
 dateCreated: 2022-04-29T01:28:58.641Z
@@ -448,3 +448,17 @@ King()
 > 这里只允许函数通过new被调用
 {.is-info}
 
+# 函数属性和方法
+## length属性
++ 描述
+保存函数定义的命名参数的个数
+``` js
+function sayName(a,b,c){
+}
+function sayAge(){}
+console.log(sayName.length) //3
+console.log(sayAge.length)  //0
+```
+## prototype属性
++ 描述
+该属性时保存引用类型所有实例方法的地方意味着toString()、valueOf()方法都保存在prototype上,prototype不可枚举不能使用for-in
