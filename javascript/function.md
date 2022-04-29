@@ -2,7 +2,7 @@
 title: js中的函数
 description: 函数使用
 published: 1
-date: 2022-04-29T03:08:47.538Z
+date: 2022-04-29T03:33:00.754Z
 tags: function
 editor: markdown
 dateCreated: 2022-04-29T01:28:58.641Z
@@ -225,4 +225,50 @@ function makeKing(name='hill' namtem=defaultname){
     let defaultname='jack'
     return `king ${name} ${nametem}`
 }
+```
+# 参数拓展与收集
+## 拓展参数
+传递的参数不是一个数组而是分别传入数组的元素
+``` js
+let values=[1,2,3,4]
+function getSum(){
+  let sum=0
+  for(let i=0;i<arguments.length;i++){
+    sum+=arguments[i]
+  }
+  return sum
+}
+console.log(getSum(...values)) //10
+```
+使用拓展操作符时不妨碍前后再传其他值
+``` js
+console.log(1,...values,2) //13
+```
+在普通函数或者箭头函数中可将拓展操作符用于命名参数，当然同时也可使用默认参数
+``` js
+let getSum=(a,b,c=0)=>a+b+c
+console.log(getSum(...[1,2,3])) //6
+console.log(getSum(...[1,2])) //3
+```
+## 收集参数
+使用拓展操作符把不同长度的独立参数组合成一个数组
+``` js
+function getSum(...values){
+  return values.reduce((x,y)=>x+y,0)
+}
+console.log(getSum(1,2,3)) //6
+```
+收集的参数前面如果还有命名参数则只会收集其余的参数，没有则得到空数组，收集的参数结果可变只能把它作为最后一个参数
+``` js
+//可以
+function getValue(firstvalue,...values){}
+//不可以
+function getValue(...values,lastvalue){}
+```
+箭头函数可以使用收集参数的方法模拟arguments
+``` js
+let getSum=(...values)=>{
+   return values.reduce((x,y)=>x+y,0)
+}
+console.log(getSum(1,2,3))
 ```
