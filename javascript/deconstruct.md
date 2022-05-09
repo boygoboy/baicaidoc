@@ -2,7 +2,7 @@
 title: 解构与赋值
 description: 数组、对象、函数等的解构与赋值
 published: 1
-date: 2022-05-09T06:39:14.035Z
+date: 2022-05-09T06:57:08.527Z
 tags: deconstruct
 editor: markdown
 dateCreated: 2022-05-09T06:39:14.035Z
@@ -50,3 +50,23 @@ let [a=b,b=3]=[]
 console.log(a,b) //报错，因为b此时未定义
 ```
 # 对象的解构赋值
++ 基本使用
+``` js
+let obj={
+       name:'张飞'，
+       age:18
+}
+let {name,age}=obj
+console.log(name) //张飞
+console.log(age)  //18
+```
++ 为解构变量起别名
+``` js
+let obj={
+       name:'张飞'，
+       age:18
+}
+let {name:f,age}=obj
+console.log(f) //张飞
+```
+
