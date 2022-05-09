@@ -2,7 +2,7 @@
 title: 解构与赋值
 description: 数组、对象、函数等的解构与赋值
 published: 1
-date: 2022-05-09T07:55:29.541Z
+date: 2022-05-09T07:57:50.490Z
 tags: deconstruct
 editor: markdown
 dateCreated: 2022-05-09T06:39:14.035Z
@@ -145,4 +145,4 @@ let str='abcd'
 let [a,b,c]=str
 console.log(a) //a
 ```
-
+[第三节-解构赋值.docx](/es6/第三节-解构赋值.docx)
