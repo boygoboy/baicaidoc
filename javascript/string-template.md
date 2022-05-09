@@ -2,7 +2,7 @@
 title: 字符串模板和字符串新增方法
 description: 字符串模板的使用
 published: 1
-date: 2022-05-09T08:46:43.990Z
+date: 2022-05-09T08:47:48.904Z
 tags: string
 editor: markdown
 dateCreated: 2022-05-09T08:10:39.944Z
@@ -103,4 +103,4 @@ console.log(str.trimRight())
 ``` js
 let str=`<h1>`${fn()}`</h1>`
 ```
-
+[第四节-字符串模板和字符串新增(1).docx](/es6/第四节-字符串模板和字符串新增(1).docx)
