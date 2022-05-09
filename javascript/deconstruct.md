@@ -2,7 +2,7 @@
 title: 解构与赋值
 description: 数组、对象、函数等的解构与赋值
 published: 1
-date: 2022-05-09T06:57:08.527Z
+date: 2022-05-09T07:40:04.789Z
 tags: deconstruct
 editor: markdown
 dateCreated: 2022-05-09T06:39:14.035Z
@@ -69,4 +69,47 @@ let obj={
 let {name:f,age}=obj
 console.log(f) //张飞
 ```
++ 复杂对象的解构
+核心：根据对象的结构进行解构
+``` js
+let obj={
+    f:[
+     '张三',
+    {
+    age:18
+    }
+  ]
+}
+let {f:[name,{age}]}=obj
+console.log(name)  //张三
+console.log(age) //18
+```
+> 解构对象
+{.is-info}
 
+``` js
+let obj={
+    f:[
+     '张三',
+    {
+    age:18
+    }
+  ]
+}
+let {f,f:[name,{age}]}=obj
+console.log(f) //['张三',{age:18}]
+```
++ 设置默认值
+``` js
+let {x='aaa'}={}
+console.log(x) //aaa
+```
+> 拓展：如果先声明变量然后解构需要添加括号：
+{.is-warning}
+
+``` js
+let name;
+{name}={name:'aaa'} //这样解构会报错
+//正确做法
+({name}={name:'aaa'})
+```
