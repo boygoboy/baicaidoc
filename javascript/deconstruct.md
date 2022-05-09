@@ -2,7 +2,7 @@
 title: 解构与赋值
 description: 数组、对象、函数等的解构与赋值
 published: 1
-date: 2022-05-09T07:40:04.789Z
+date: 2022-05-09T07:55:29.541Z
 tags: deconstruct
 editor: markdown
 dateCreated: 2022-05-09T06:39:14.035Z
@@ -113,3 +113,36 @@ let name;
 //正确做法
 ({name}={name:'aaa'})
 ```
+# 函数解构
+函数的解构主要是参数设置默认值，使用的依然是数组和对象的解构
++ 设置默认值
+``` js
+function test([a,b,c=3]){
+   return a+b+c
+}
+```
++ 解构函数的返回值
+``` js
+//数组
+function fn(){
+   return [1,2,3]
+}
+let [a,b,c]=fn()
+console.log(a) //1
+//对象
+function fn(){
+     return {
+         name:'aaa',
+         age:18
+     }
+}
+let {name,age}=fn()
+```
+# 字符串的解构
+将字符串转化为类似数组的解构
+``` js
+let str='abcd'
+let [a,b,c]=str
+console.log(a) //a
+```
+
