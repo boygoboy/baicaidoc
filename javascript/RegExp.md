@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-10T09:01:58.926Z
+date: 2022-05-10T09:30:23.118Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -63,3 +63,21 @@ console.log(/\d+\.\d+/.test(price))
 let reg=new RegExp("\\d+\\.\\d+")
 console.log(reg.test(price))
 ```
+# 字符边界约束
++ 描述
+'^'表示匹配模式以什么开始，'$'表示匹配模式以什么结尾
++ 例子
+``` js
+let str=21kk33
+console.log(/^\d$/.test(str)) //表示以数字开头以数字结尾的字符串
+```
+# 数值与空白元字符
++ 描述
+d表示数值类型数据，D表示非数值类型数据，s表示空白数据、S表示非空白数据
++ 例子
+``` js
+let str='hong 2020'
+console.log(str.match(/\d+/)) //2020
+console.log(str.match(/\D+/))  //hong
+```
+# w与W元字符
