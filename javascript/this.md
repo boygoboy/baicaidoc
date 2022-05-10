@@ -2,7 +2,7 @@
 title: js中的this
 description: 介绍this相关问题
 published: 1
-date: 2022-05-10T05:54:17.021Z
+date: 2022-05-10T05:56:44.973Z
 tags: this
 editor: markdown
 dateCreated: 2022-05-10T05:04:02.121Z
@@ -89,3 +89,4 @@ var obj={
 obj.say();//输出的值为11
 ```
 这里的箭头函数中的this.b，箭头函数本身与say平级以key:value的形式，也就是箭头函数本身所在的对象为obj，而obj的父执行上下文就是window，因此这里的this.b实际上表示的是window.b，因此输出的是11。(this只有在函数被调用，或者通过构造函数new Object()的形式才会有this)
+[this详解.docx](/es6/this详解.docx)
