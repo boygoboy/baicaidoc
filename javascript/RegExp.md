@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-10T09:30:23.118Z
+date: 2022-05-10T09:41:03.389Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -81,3 +81,13 @@ console.log(str.match(/\d+/)) //2020
 console.log(str.match(/\D+/))  //hong
 ```
 # w与W元字符
++ 描述
+w表示匹配字母数字下划线的字符，W表示匹配非字母数字下划线的字符
++ 例子
+``` js
+let str=cai23_
+console.log(str.match(/\w+/)) //cai123_
+//匹配邮箱
+let email=2343fdssdf@qq.com
+console.log(email.match(/^\w+@\w+\.\w+$/))
+```
