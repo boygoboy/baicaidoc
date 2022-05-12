@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-10T09:41:03.389Z
+date: 2022-05-12T06:12:54.145Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -91,3 +91,39 @@ console.log(str.match(/\w+/)) //cai123_
 let email=2343fdssdf@qq.com
 console.log(email.match(/^\w+@\w+\.\w+$/))
 ```
+# .元字符
++ 描述
+.表示匹配除换行符以外的任意字符
++ 例子
+**如果要匹配点则需要转义**
+``` js
+let hd = `houdunren@com`;
+console.log(/houdunren.com/i.test(hd)); //true
+console.log(/houdunren\.com/i.test(hd)); //false
+```
+**使用.匹配除换行符外任意字符，下面匹配不到hdcms.com 因为有换行符**
+``` js
+const url = `
+  https://www.houdunren.com
+  hdcms.com
+`;
+console.log(url.match(/.+/)[0]);
+```
+**使用/s视为单行模式（忽略换行）时，. 可以匹配所有**
+``` js
+let hd = `
+  <span>
+    houdunren
+    hdcms
+  </span>
+`;
+let res = hd.match(/<span>.*<\/span>/s);
+console.log(res[0]);
+```
+**正则中空格会按普通字符对待**
+``` js
+let tel = `010 - 999999`;
+console.log(/\d+-\d+/.test(tel)); //false
+console.log(/\d+ - \d+/.test(tel)); //true
+```
+
