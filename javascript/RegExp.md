@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-12T07:04:20.264Z
+date: 2022-05-12T07:42:28.976Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -239,3 +239,49 @@ let reg = /(\d+),?/y;
 reg.lastIndex = 7;
 while ((res = reg.exec(hd))) console.log(res[1]);
 ```
+# 原子表
++ 描述
+在一组字符中匹配某个元字符，在正则表达式中通过元字符表来完成，就是放到[] (方括号)中。
++ 语法
+![yzb.png](/yzb.png)
++ 例子
+**使用[]匹配其中任意字符即成功，下例中匹配ue任何一个字符，而不会当成一个整体来对待**
+``` js
+const url = "houdunren.com";
+console.log(/ue/.test(url)); //false
+console.log(/[ue]/.test(url)); //true
+```
+**日期的匹配**
+``` js
+let tel = "2022-02-23";
+console.log(tel.match(/\d{4}([-\/])\d{2}\1\d{2}/));
+```
+> 这里\1表示使用[-\/]
+{.is-info}
+
+**获取0~3间的任意数字**
+``` js
+const num = "2";
+console.log(/[0-3]/.test(num)); //true
+```
+**匹配a~f间的任意字符**
+``` js
+const hd = "e";
+console.log(/[a-f]/.test(hd)); //true
+```
+**顺序为升序否则将报错**
+``` js
+const num = "2";
+console.log(/[3-0]/.test(num)); //SyntaxError
+```
+**字母也要升序否则也报错**
+``` js
+const hd = "houdunren.com";
+console.log(/[f-a]/.test(hd)); //SyntaxError
+```
+**原子表区间匹配：匹配以字母开头的字母数字下划线组成的长度在4-7位的字符**
+``` js
+let str='agf_ff'
+console.log(str.magtch(/^[a-z]\w{3,6}$/i))
+```
+
