@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-12T06:44:21.009Z
+date: 2022-05-12T07:04:20.264Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -187,4 +187,55 @@ let str = "𝒳𝒴";
 console.table(str.match(/[𝒳𝒴]/)); //结果为乱字符"�"
 
 console.table(str.match(/[𝒳𝒴]/u)); //结果正确 "𝒳"
+```
+## lastIndex
++ 描述
+RegExp对象lastIndex 属性可以返回或者设置正则表达式开始匹配的位置
+1. 必须结合 g 修饰符使用
+2. 对 exec 方法有效
+3. 匹配完成时，lastIndex 会被重置为0
+``` js
+let hd = `后盾人不断分享视频教程，后盾人网址是 houdunren.com`;
+let reg = /后盾人(.{2})/g;
+reg.lastIndex = 10; //从索引10开始搜索
+console.log(reg.exec(hd));
+console.log(reg.lastIndex);
+
+reg = /\p{sc=Han}/gu;
+while ((res = reg.exec(hd))) {
+  console.log(res[0]);
+}
+```
+> 这里while循环中会一直匹配符号条件的字符直到匹配不到跳出循环
+{.is-info}
+
+## y
+**我们来对比使用 y 与g 模式，使用 g 模式会一直匹配字符串**
+``` js
+let hd = "udunren";
+let reg = /u/g;
+console.log(reg.exec(hd));
+console.log(reg.lastIndex); //3
+console.log(reg.exec(hd));
+console.log(reg.lastIndex); //3
+console.log(reg.exec(hd)); //null
+console.log(reg.lastIndex); //0
+```
+**但使用y 模式后如果从 lastIndex 开始匹配不成功就不继续匹配了,同时重置lastIndex**
+``` js
+let hd = "udunren";
+let reg = /u/y;
+console.log(reg.exec(hd));
+console.log(reg.lastIndex); //1
+console.log(reg.exec(hd)); //null
+console.log(reg.lastIndex); //0
+```
+**因为使用 y 模式可以在匹配不到时停止匹配，在匹配下面字符中的qq时可以提高匹配效率**
+``` js
+let hd = `后盾人QQ群:11111111,999999999,88888888
+后盾人不断分享视频教程，后盾人网址是 houdunren.com`;
+
+let reg = /(\d+),?/y;
+reg.lastIndex = 7;
+while ((res = reg.exec(hd))) console.log(res[1]);
 ```
