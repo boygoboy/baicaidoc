@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-12T07:42:28.976Z
+date: 2022-05-12T07:59:15.943Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -284,4 +284,36 @@ console.log(/[f-a]/.test(hd)); //SyntaxError
 let str='agf_ff'
 console.log(str.magtch(/^[a-z]\w{3,6}$/i))
 ```
-
+**排除匹配使用^**
+``` js
+let str='张三:010-99999999,李四:020-88888888;'
+console.log(str.match(/[^:\d\-,]+/g))
+```
+**原子表中有些正则字符不需要转义，如果转义也是没问题的，可以理解为在原子表中. 就是小数点**
+``` js
+let str = "(houdunren.com)+";
+console.table(str.match(/[().+]/g));
+//使用转义也没有问题
+console.table(str.match(/[\(\)\.\+]/g));
+```
+**可以使用 [\s\S] 或 [\d\D]匹配到所有字符包括换行符**
+```js
+let reg=/[\s\S]+/g
+let reg1=/[\d\D]+/g
+```
+**下面是使用原子表知识删除所有标题**
+``` js
+<body>
+  <p>后盾人</p>
+  <h1>houdunren.com</h1>
+  <h2>hdcms.com</h2>
+</body>
+<script>
+  const body = document.body;
+  const reg = /<(h[1-6])>[\s\S]*<\/\1>*/g;
+  let content = body.innerHTML.replace(reg, "");
+  document.body.innerHTML = content;
+</script>
+```
+> * 代表0个或多个
+{.is-info}
