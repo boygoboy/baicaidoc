@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-12T07:59:15.943Z
+date: 2022-05-12T07:59:54.161Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -315,5 +315,7 @@ let reg1=/[\d\D]+/g
   document.body.innerHTML = content;
 </script>
 ```
-> * 代表0个或多个
+>  * 代表0个或多个
 {.is-info}
+
+
