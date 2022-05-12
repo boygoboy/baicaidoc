@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-12T06:12:54.145Z
+date: 2022-05-12T06:44:21.009Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -126,4 +126,65 @@ let tel = `010 - 999999`;
 console.log(/\d+-\d+/.test(tel)); //false
 console.log(/\d+ - \d+/.test(tel)); //true
 ```
+# 模式修饰符
++ 描述
+正则表达式在执行时会按他们的默认执行方式进行，但有时候默认的处理方式总不能满足我们的需求，所以可以使用模式修正符更改默认方式。
+![msxsf.png](/msxsf.png)
+## i
+**将所有houdunren.com 统一为小写**
+``` js
+let hd = "houdunren.com HOUDUNREN.COM";
+hd = hd.replace(/houdunren\.com/gi, "houdunren.com");
+console.log(hd);
+```
+## g
+**使用 g 修饰符可以全局操作内容**
+``` js
+let hd = "houdunren";
+hd = hd.replace(/u/, "@");
+console.log(hd); //没有使用 g 修饰符是，只替换了第一个
 
+let hd = "houdunren";
+hd = hd.replace(/u/g, "@");
+console.log(hd); //使用全局修饰符后替换了全部的 u
+```
+## m
+**用于将内容视为多行匹配，主要是对 ^和 $ 的修饰将下面是将以 #数字开始的课程解析为对象结构，学习过后面讲到的原子组可以让代码简单些**
+``` js
+let hd = `
+  #1 js,200元 #
+  #2 php,300元 #
+  #9 houdunren.com # 后盾人
+  #3 node.js,180元 #
+`;
+// [{name:'js',price:'200元'}]
+let lessons = hd.match(/^\s*#\d+\s+.+\s+#$/gm).map(v => {
+  v = v.replace(/\s*#\d+\s*/, "").replace(/\s+#/, "");
+  [name, price] = v.split(",");
+  return { name, price };
+});
+console.log(JSON.stringify(lessons, null, 2));
+```
+## u
+**每个字符都有属性，如L属性表示是字母，P 表示标点符号，需要结合 u 模式才有效。其他属性简写可以访问[属性的别名](https://www.unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt) 网站查看。**
+``` js
+//使用\p{L}属性匹配字母
+let hd = "houdunren2010.不断发布教程，加油！";
+console.log(hd.match(/\p{L}+/u));
+//使用\p{P}属性匹配标点
+console.log(hd.match(/\p{P}+/gu));
+```
+**字符也有unicode文字系统属性 Script=文字系统，下面是使用 \p{sc=Han} 获取中文字符 han为中文系统，其他语言请查看 [文字语言表](http://www.unicode.org/standard/supported.html)**
+``` js
+let hd = `
+张三:010-99999999,李四:020-88888888`;
+let res = hd.match(/\p{sc=Han}+/gu);
+console.log(res);
+```
+**使用 u 模式可以正确处理四个字符的 UTF-16 字节编码**
+``` js
+let str = "𝒳𝒴";
+console.table(str.match(/[𝒳𝒴]/)); //结果为乱字符"�"
+
+console.table(str.match(/[𝒳𝒴]/u)); //结果正确 "𝒳"
+```
