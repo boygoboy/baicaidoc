@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-13T03:52:01.564Z
+date: 2022-05-13T04:00:39.723Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -398,4 +398,37 @@ while ((v = reg.exec(hd))) {
 > 这里https后面的？指s不确定有没有，使用(?:将对应原子组排除在外，执行reg.exec时只能得到最外层包裹域名的原子组
 {.is-info}
 
+## 分组别名
+如果希望返回的组数据更清晰，可以为原子组编号，结果将保存在返回的 groups字段中
+``` js
+let hd = "<h1>houdunren.com</h1>";
+console.dir(hd.match(/<(?<tag>h[1-6])[\s\S]*<\/\1>/));
+````
+组别名使用 ?<> 形式定义，下面将标签替换为p标签
+``` js
+let hd = `
+  <h1>houdunren</h1>
+  <span>后盾人</span>
+  <h2>hdcms</h2>
+`;
+let reg = /<(?<tag>h[1-6])>(?<con>[\s\S]*)<\/\1>/gi;
+console.log(hd.replace(reg, `<p>$<con></p>`));
+```
+获取链接与网站名称组成数组集合
+``` js
+<body>
+  <a href="https://www.houdunren.com">后盾人</a>
+  <a href="https://www.hdcms.com">hdcms</a>
+  <a href="https://www.sina.com.cn">新浪</a>
+</body>
 
+<script>
+  let body = document.body.innerHTML;
+  let reg = /<a\s*.+?(?<link>https?:\/\/(\w+\.)+(com|org|cc|cn)).*>(?<title>.+)<\/a>/gi;
+  const links = [];
+  for (const iterator of body.matchAll(reg)) {
+    links.push(iterator["groups"]);
+  }
+  console.log(links);
+</script>
+```
