@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-13T04:11:45.480Z
+date: 2022-05-13T05:21:03.108Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -430,5 +430,58 @@ console.log(hd.replace(reg, `<p>$<con></p>`));
     links.push(iterator["groups"]);
   }
   console.log(links);
+</script>
+```
+# 重复匹配
++ 基本使用
+如果要重复匹配一些内容时我们要使用重复匹配修饰符，包括以下几种。
+![zfpp.png](/js-regexp/zfpp.png)
+> 因为正则最小单位是元字符，而我们很少只匹配一个元字符如a、b所以基本上重复匹配在每条正则语句中都是必用到的内容。
+{.is-warning}
+
+默认情况下重复选项对单个字符进行重复匹配，即不是贪婪匹配
+``` js
+let hd = "hdddd";
+console.log(hd.match(/hd+/i)); //hddd
+```
+使用原子组后则对整个组重复匹配
+``` js
+let hd = "hdddd";
+console.log(hd.match(/(hd)+/i)); //hd
+```
+下面是验证坐机号的正则
+``` js
+let hd = "010-12345678";
+console.log(/0\d{2,3}-\d{7,8}/.exec(hd));
+```
+验证用户名只能为3~8位的字母或数字下划线，并以字母开始
+``` js
+<body>
+  <input type="text" name="username" />
+</body>
+<script>
+  let input = document.querySelector(`[name="username"]`);
+  input.addEventListener("keyup", e => {
+    const value = e.target.value;
+    let state = /^[a-z][\w]{2,7}$/i.test(value);
+    console.log(
+      state ? "正确！" : "用户名只能为3~8位的字母或数字，并以字母开始"
+    );
+  });
+</script>
+```
+验证密码必须包含大写字母并在5~10位之间
+``` js
+<body>
+<input type="text" name="password" />
+</body>
+<script>
+let input = document.querySelector(`[name="password"]`);
+input.addEventListener("keyup", e => {
+  const value = e.target.value.trim();
+  const regs = [/^[a-zA-Z0-9]{5,10}$/, /[A-Z]/];
+  let state = regs.every(v => v.test(value));
+  console.log(state ? "正确！" : "密码必须包含大写字母并在5~10位之间");
+});
 </script>
 ```
