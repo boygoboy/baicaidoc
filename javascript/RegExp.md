@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-12T07:59:54.161Z
+date: 2022-05-13T03:52:01.564Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -316,6 +316,86 @@ let reg1=/[\d\D]+/g
 </script>
 ```
 >  * 代表0个或多个
+{.is-info}
+
+# 原子组
+**描述**
++ 如果一次要匹配多个元子，可以通过元子组完成
++ 原子组与原子表的差别在于原子组一次匹配多个元子，而原子表则是匹配任意一个字符
++ 元字符组用 () 包裹
+## 基本使用
+没有添加 g 模式修正符时只匹配到第一个，匹配到的信息包含以下数据
+![yzz.png](/js-regexp/yzz.png)
+在match中使用原子组匹配，会将每个组数据返回到结果中
++ 0 为匹配到的完成内容
++ 1/2 等 为原子级内容
++ index 匹配的开始位置
++ input 原始数据
++ groups 组别名
+``` js
+let hd = "houdunren.com";
+console.log(hd.match(/houdun(ren)\.(com)/)); 
+//["houdunren.com", "ren", "com", index: 0, input: "houdunren.com", groups: undefined]
+```
+下面使用原子组匹配标题元素
+``` js
+let hd = `
+  <h1>houdunren</h1>
+  <span>后盾人</span>
+  <h2>hdcms</h2>
+`;
+console.table(hd.match(/<(h[1-6])[\s\S]*<\/\1>/g));
+```
+检测 0~100 的数值，使用 parseInt 将数值转为10进制
+``` js
+console.log(/^(\d{1,2}|100)$/.test(parseInt(09, 10)));
+```
+## 邮箱匹配
+下面使用原子组匹配邮箱
+``` js
+let hd = "2300071698@qq.com";
+let reg = /^[\w\-]+@[\w\-]+\.(com|org|cn|cc|net)$/i;
+console.dir(hd.match(reg));
+```
+如果邮箱是以下格式 houdunren@hd.com.cn 上面规则将无效，需要定义以下方式
+``` js
+let hd = `admin@houdunren.com.cn`;
+let reg = /^[\w-]+@([\w-]+\.)+(org|com|cc|cn)$/;
+console.log(hd.match(reg));
+```
+## 引用分组
++ 描述
+原子组在正则中可以用\1,\2,\3......按原子组顺序代替，在替换等操作中可以用$1,$2,$3.......等按原子组顺序替换
++ 例子
+\n 在匹配时引用原子组， $n 指在替换时使用匹配的组数据。下面将标签替换为p标签
+``` js
+let hd = `
+  <h1>houdunren</h1>
+  <span>后盾人</span>
+  <h2>hdcms</h2>
+`;
+
+let reg = /<(h[1-6])>([\s\S]*)<\/\1>/gi;
+console.log(hd.replace(reg, `<p>$2</p>`));
+```
+> 当替换操做第二个参数使用函数时，函数中的参数为返回的原子组
+{.is-info}
+
+## 嵌套分组不记录组
+如果只希望组参与匹配，便不希望返回到结果中使用 (?: 处理。下面是获取所有域名的示例
+``` js
+let hd = `
+  https://www.houdunren.com
+  http://houdunwang.com
+  https://hdcms.com
+`;
+
+let reg = /https?:\/\/((?:\w+\.)?\w+\.(?:com|org|cn))/gi;
+while ((v = reg.exec(hd))) {
+  console.dir(v);
+}
+```
+> 这里https后面的？指s不确定有没有，使用(?:将对应原子组排除在外，执行reg.exec时只能得到最外层包裹域名的原子组
 {.is-info}
 
 
