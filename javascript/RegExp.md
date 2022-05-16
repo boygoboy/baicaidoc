@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-13T05:21:03.108Z
+date: 2022-05-16T01:32:52.950Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -483,5 +483,69 @@ input.addEventListener("keyup", e => {
   let state = regs.every(v => v.test(value));
   console.log(state ? "正确！" : "密码必须包含大写字母并在5~10位之间");
 });
+</script>
+```
+# 禁止贪婪
++ 描述
+正则表达式在进行重复匹配时，默认是贪婪匹配模式，也就是说会尽量匹配更多内容，但是有的时候我们并不希望他匹配更多内容，这时可以通过?进行修饰来禁止重复匹配
+![jztl.png](/js-regexp/jztl.png)
+``` js
+let str = "aaa";
+console.log(str.match(/a+/)); //aaa
+console.log(str.match(/a+?/)); //a
+console.log(str.match(/a{2,3}?/)); //aa
+console.log(str.match(/a{2,}?/)); //aa
+```
++ 例子
+将所有span更换为h4 并描红，并在内容前加上 后盾人-
+``` js
+<body>
+  <main>
+    <span>houdunwang</span>
+    <span>hdcms.com</span>
+    <span>houdunren.com</span>
+  </main>
+</body>
+<script>
+  const main = document.querySelector("main");
+  const reg = /<span>([\s\S]+?)<\/span>/gi;
+  main.innerHTML = main.innerHTML.replace(reg, (v, p1) => {
+    console.log(p1);
+    return `<h4 style="color:red">后盾人-${p1}</h4>`;
+  });
+</script>
+```
+使用禁止贪婪查找页面中的标题元素
+``` js
+<body>
+  <h1>
+    houdunren.com
+  </h1>
+  <h2>hdcms.com</h2>
+  <h3></H3>
+  <H1></H1>
+</body>
+
+<script>
+  let body = document.body.innerHTML;
+  let reg = /<(h[1-6])>[\s\S]*?<\/\1>/gi;
+  console.table(body.match(reg));
+</script>
+```
+# 全局匹配
+下面是使用match 全局获取页面中标签内容，但并不会返回匹配细节
+``` js
+<body>
+  <h1>houdunren.com</h1>
+  <h2>hdcms.com</h2>
+  <h1>后盾人</h1>
+</body>
+
+<script>
+  function elem(tag) {
+    const reg = new RegExp("<(" + tag + ")>.+?<\.\\1>", "g");
+    return document.body.innerHTML.match(reg);
+  }
+  console.table(elem("h1"));
 </script>
 ```
