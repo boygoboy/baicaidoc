@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-16T01:32:52.950Z
+date: 2022-05-16T01:36:02.235Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -548,4 +548,27 @@ console.log(str.match(/a{2,}?/)); //aa
   }
   console.table(elem("h1"));
 </script>
+```
+## matchAll
+需要添加g修饰符
+在新浏览器中支持使用 matchAll 操作，并返回迭代对象
+``` js
+let str = "houdunren";
+let reg = /[a-z]/ig;
+for (const iterator of str.matchAll(reg)) {
+  console.log(iterator);
+}
+```
+在原型定义 matchAll方法，用于在旧浏览器中工作，不需要添加g 模式运行
+``` js
+String.prototype.matchAll = function(reg) {
+  let res = this.match(reg);
+  if (res) {
+    let str = this.replace(res[0], "^".repeat(res[0].length));
+    let match = str.matchAll(reg) || [];
+    return [res, ...match];
+  }
+};
+let str = "houdunren";
+console.dir(str.matchAll(/(U)/i));
 ```
