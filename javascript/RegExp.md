@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-16T03:09:13.276Z
+date: 2022-05-16T04:00:48.365Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -795,4 +795,212 @@ let reg=/<a.*?href=(['"])(?<link>.*?)\1>(?<title>.*?)<\/a>/ig
 for(const iterator of str.matchAll(reg)){
     links.push(iterator["groups"])
 }
+```
+# 正则方法
+下面是 RegExp 正则对象提供的操作方法
+## test
+检测输入的邮箱是否合法
+``` js
+<body>
+  <input type="text" name="email" />
+</body>
+
+<script>
+  let email = document.querySelector(`[name="email"]`);
+  email.addEventListener("keyup", e => {
+    console.log(/^\w+@\w+\.\w+$/.test(e.target.value));
+  });
+</script>
+```
+## exec
+不使用 g 修饰符时与 match 方法使用相似，使用 g 修饰符后可以循环调用直到全部匹配完。
++ 使用 g 修饰符多次操作时使用同一个正则，即把正则定义为变量使用
++ 使用 g 修饰符最后匹配不到时返回 null
+计算内容中后盾人出现的次数
+``` js
+<body>
+  <div class="content">
+    后盾人不断分享视频教程，后盾人网址是 houdunren.com
+  </div>
+</body>
+
+<script>
+  let content = document.querySelector(".content");
+  let reg = /(?<tag>后盾)人/g;
+  let num = 0;
+  while ((result = reg.exec(content.innerHTML))) {
+    num++;
+  }
+  console.log(`后盾人共出现${num}次`);
+</script>
+```
+# 断言匹配
+断言虽然写在扩号中但它不是组，所以不会在匹配结果中保存，可以将断言理解为正则中的条件。
+## (?=exp)
++ 描述
+?=exp 匹配后面为 exp 的内容
++ 例子
+把后面是教程 的后盾人汉字加上链接
+``` js
+<body>
+  <main>
+    后盾人不断分享视频教程，学习后盾人教程提升编程能力。
+  </main>
+</body>
+
+<script>
+  const main = document.querySelector("main");
+  const reg = /后盾人(?=教程)/gi;
+  main.innerHTML = main.innerHTML.replace(
+    reg,
+    v => `<a href="https://houdunren.com">${v}</a>`
+  );
+</script>
+```
+下面是将价格后面 添加上 .00
+``` js
+<script>
+  let lessons = `
+    js,200元,300次
+    php,300.00元,100次
+    node.js,180元,260次
+  `;
+  let reg = /(\d+)(.00)?(?=元)/gi;
+  lessons = lessons.replace(reg, (v, ...args) => {
+    args[1] = args[1] || ".00";
+    return args.splice(0, 2).join("");
+  });
+  console.log(lessons);
+</script>
+```
+使用断言验证用户名必须为五位，下面正则体现断言是不是组，并且不在匹配结果中记录
+``` js
+<body>
+  <input type="text" name="username" />
+</body>
+
+<script>
+  document
+    .querySelector(`[name="username"]`)
+    .addEventListener("keyup", function() {
+      let reg = /^(?=[a-z]{5}$)/i;
+      console.log(reg.test(this.value));
+    });
+</script>
+```
+## (?<=exp)
++ 描述
+?<=exp 匹配前面为 exp 的内容
++ 例子
+匹配前面是houdunren 的数字
+``` js
+let hd = "houdunren789hdcms666";
+let reg = /(?<=houdunren)\d+/i;
+console.log(hd.match(reg)); //789
+```
+匹配前后都是数字的内容
+``` js
+let hd = "houdunren789hdcms666";
+let reg = /(?<=\d)[a-z]+(?=\d{3})/i;
+console.log(hd.match(reg));
+```
+所有超链接替换为houdunren.com
+``` js
+<body>
+  <a href="https://baidu.com">百度</a>
+  <a href="https://yahoo.com">雅虎</a>
+</body>
+<script>
+  const body = document.body;
+  let reg = /(?<=<a.*href=(['"])).+?(?=\1)/gi;
+  // console.log(body.innerHTML.match(reg));
+  body.innerHTML = body.innerHTML.replace(reg, "https://houdunren.com");
+</script>
+```
+下例中将 后盾人 后面的视频添加上链接
+``` js
+<body>
+  <h1>后盾人视频不断录制案例丰富的视频教程</h1>
+</body>
+
+<script>
+  let h1 = document.querySelector("h1");
+  let reg = /(?<=后盾人)视频/;
+  h1.innerHTML = h1.innerHTML.replace(reg, str => {
+    return `<a href="https://www.houdunren.com">${str}</a>`;
+  });
+</script>
+```
+将电话的后四位模糊处理
+``` js
+let users = `
+  向军电话: 12345678901
+  后盾人电话: 98745675603
+`;
+
+let reg = /(?<=\d{7})\d+\s*/g;
+users = users.replace(reg, str => {
+  return "*".repeat(4);
+});
+console.log(users); //向军电话: 1234567****后盾人电话: 9874567****
+```
+获取标题中的内容
+``` js
+let hd = `<h1>后盾人视频不断录制案例丰富的视频教程</h1>`;
+let reg = /(?<=<h1>).*(?=<\/h1>)/g;
+console.log(hd.match(reg));
+```
+## (?!exp)
++ 描述
+后面不能出现 exp 指定的内容
++ 例子
+使用 (?!exp)字母后面不能为两位数字
+``` js
+let hd = "houdunren12";
+let reg = /[a-z]+(?!\d{2})$/i;
+console.table(reg.exec(hd));
+```
+下例为用户名中不能出现向军
+``` js
+<body>
+  <main>
+    <input type="text" name="username" />
+  </main>
+</body>
+<script>
+  const input = document.querySelector(`[name="username"]`);
+  input.addEventListener("keyup", function() {
+    const reg = /^(?!.*向军.*)[a-z]{5,6}$/i;
+    console.log(this.value.match(reg));
+  });
+</script>
+```
+## (?<!exp)
++ 描述
+前面不能出现exp指定的内容
++ 例子
+获取前面不是数字的字符
+``` js
+let hd = "hdcms99houdunren";
+let reg = /(?<!\d+)[a-z]+/i;
+console.log(reg.exec(hd)); //hdcms
+```
+把所有不是以 https://oss.houdunren.com 开始的静态资源替换为新网址
+``` js
+<body>
+  <main>
+    <a href="https://www.houdunren.com/1.jpg">1.jpg</a>
+    <a href="https://oss.houdunren.com/2.jpg">2.jpg</a>
+    <a href="https://cdn.houdunren.com/2.jpg">3.jpg</a>
+    <a href="https://houdunren.com/2.jpg">3.jpg</a>
+  </main>
+</body>
+<script>
+  const main = document.querySelector("main");
+  const reg = /https:\/\/(\w+)?(?<!oss)\..+?(?=\/)/gi;
+  main.innerHTML = main.innerHTML.replace(reg, v => {
+    console.log(v);
+    return "https://oss.houdunren.com";
+  });
+</script>
 ```
