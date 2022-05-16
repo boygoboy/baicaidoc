@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-16T02:42:31.996Z
+date: 2022-05-16T03:09:13.276Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -683,4 +683,116 @@ console.log(hd.replace(/\((\d{3,4})\)(\d{7,8})/g, "$1-$2"));
     `<a href="https://www.houdunren.com">$&</a>`
   );
 </script>
+```
+为链接添加上https ，并补全 www.
+``` js
+<body>
+  <main>
+    <a style="color:red" href="http://www.hdcms.com">
+      开源系统
+    </a>
+    <a id="l1" href="http://houdunren.com">后盾人</a>
+    <a href="http://yahoo.com">雅虎</a>
+    <h4>http://www.hdcms.com</h4>
+  </main>
+</body>
+<script>
+  const main = document.querySelector("body main");
+  const reg = /(<a.*href=['"])(http)(:\/\/)(www\.)?(hdcms|houdunren)/gi;
+  main.innerHTML = main.innerHTML.replace(reg, (v, ...args) => {
+    args[1] += "s";
+    args[3] = args[3] || "www.";
+    return args.splice(0, 5).join("");
+  });
+</script>
+```
+将标题标签全部替换为 p 标签
+``` js
+<body>
+  <h1>houdunren.com</h1>
+  <h2>hdcms.com</h2>
+  <h1>后盾人</h1>
+</body>
+
+<script>
+  const reg = /<(h[1-6])>(.*?)<\/\1>/g;
+  const body = document.body.innerHTML;
+  const html = body.replace(reg, function(str, tag, content) {
+    return `<p>${content}</p>`;
+  });
+  document.body.innerHTML = html;
+</script>
+```
+删除页面中的 h1~h6 标签
+``` js
+<body>
+  <h1>houdunren.com</h1>
+  <h2>hdcms.com</h2>
+  <h1>后盾人</h1>
+</body>
+<script>
+  const reg = /<(h[1-6])>(.*?)<\/\1>/g;
+  const body = document.body.innerHTML;
+  const html = body.replace(reg, "");
+  document.body.innerHTML = html;
+</script>
+```
+> 回调函数：replace 支持回调函数操作，用于处理复杂的替换逻辑
+{.is-info}
+
+![hdhs.png](/js-regexp/hdhs.png)
+使用回调函数将 后盾人 添加上链接
+``` js
+<body>
+  <div class="content">
+    后盾人不断更新优质视频教程
+  </div>
+</body>
+
+<script>
+  let content = document.querySelector(".content");
+  content.innerHTML = content.innerHTML.replace("后盾人", function(
+    search,
+    pos,
+    source
+  ) {
+    return `<a href="https://www.houdunren.com">${search}</a>`;
+  });
+</script>
+```
+为所有标题添加上 hot 类
+``` js
+<body>
+  <div class="content">
+    <h1>后盾人</h1>
+    <h2>houdunren.com</h2>
+    <h1>后盾人</h1>
+  </div>
+</body>
+<script>
+  let content = document.querySelector(".content");
+  let reg = /<(h[1-6])>([\s\S]*?)<\/\1>/gi;
+  content.innerHTML = content.innerHTML.replace(
+    reg,
+    (
+      search, //匹配到的字符
+      p1, //第一个原子组
+      p2, //第二个原子组
+      index, //索引位置
+      source //原字符
+    ) => {
+      return `
+    <${p1} class="hot">${p2}</${p1}>
+    `;
+    }
+  );
+</script>
+```
+提取链接link和title
+核心代码
+``` js
+let reg=/<a.*?href=(['"])(?<link>.*?)\1>(?<title>.*?)<\/a>/ig
+for(const iterator of str.matchAll(reg)){
+    links.push(iterator["groups"])
+}
 ```
