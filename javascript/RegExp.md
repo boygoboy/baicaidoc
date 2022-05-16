@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-16T04:00:48.365Z
+date: 2022-05-16T05:12:07.914Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -1004,3 +1004,8 @@ console.log(reg.exec(hd)); //hdcms
   });
 </script>
 ```
+> 参考
+{.is-success}
++ 文档
+[js正则](https://doc.houdunren.com/js/14%20%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html)
+
