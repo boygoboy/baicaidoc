@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-16T01:54:01.733Z
+date: 2022-05-16T02:42:31.996Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -599,4 +599,88 @@ https://www.houdunren.com`;
 
 let res = search(hd, /https?:\/\/(\w+\.)?(\w+\.)+(com|cn)/gi);
 console.dir(res);
+```
+# 字符方法
+下面介绍的方法是 String 提供的支持正则表达式的方法
+## search
++ 描述
+search() 方法用于检索字符串中指定的子字符串，也可以使用正则表达式搜索，返回值为索引位置
++ 例子
+``` js
+let str = "houdunren.com";
+console.log(str.search("com"));
+//使用正则表达式
+console.log(str.search(/\.com/i));
+```
+## match
+直接使用字符串搜索
+``` js
+let str = "houdunren.com";
+console.log(str.match("com"));
+```
+使用正则获取内容，下面是简单的搜索字符串
+``` js
+let hd = "houdunren";
+let res = hd.match(/u/);
+console.log(res);
+console.log(res[0]); //匹配的结果
+console.log(res[index]); //出现的位置
+```
+如果使用 g 修饰符时，就不会有结果的详细信息了（可以使用exec），下面是获取所有h1~6的标题元素
+``` js
+let body = document.body.innerHTML;
+let result = body.match(/<(h[1-6])>[\s\S]+?<\/\1>/g);
+console.table(result);
+```
+## matchAll
+在新浏览器中支持使用 matchAll 操作，并返回迭代对象
+``` js
+let str = "houdunren";
+let reg = /[a-z]/ig;
+for (const iterator of str.matchAll(reg)) {
+  console.log(iterator);
+}
+```
+## split
+用于使用字符串或正则表达式分隔字符串，下面是使用字符串分隔日期
+``` js
+let str = "2023-02-12";
+console.log(str.split("-")); //["2023", "02", "12"]
+```
+如果日期的连接符不确定，那就要使用正则操作了
+``` js
+let str = "2023/02-12";
+console.log(str.split(/-|\//));
+console.log(str.split(/[-\/]/));
+```
+## replace
+replace 方法不仅可以执行基本字符替换，也可以进行正则替换，下面替换日期连接符
+``` js 
+let str = "2023/02/12";
+console.log(str.replace(/\//g, "-")); //2023-02-12
+```
+替换字符串可以插入下面的特殊变量名：
+![thblm.png](/js-regexp/thblm.png)
+在后盾人前后添加三个=
+``` js
+let hd = "=后盾人=";
+console.log(hd.replace(/后盾人/g, "$`$`$&$'$'"));
+```
+把电话号用 - 连接
+``` js
+let hd = "(010)99999999 (020)8888888";
+console.log(hd.replace(/\((\d{3,4})\)(\d{7,8})/g, "$1-$2"));
+```
+把所有教育汉字加上链接 https://www.houdunren.com
+``` js
+<body>
+  在线教育是一种高效的学习方式，教育是一生的事业
+</body>
+<script>
+  const body = document.body;
+  body.innerHTML = body.innerHTML.replace(
+    /教育/g,
+    `<a href="https://www.houdunren.com">$&</a>`
+  );
+</script>
 ```
