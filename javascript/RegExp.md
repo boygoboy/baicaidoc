@@ -2,7 +2,7 @@
 title: js中的正则表达式
 description: 正则表达式
 published: 1
-date: 2022-05-16T01:36:02.235Z
+date: 2022-05-16T01:50:47.324Z
 tags: regexp
 editor: markdown
 dateCreated: 2022-05-10T09:01:58.926Z
@@ -571,4 +571,32 @@ String.prototype.matchAll = function(reg) {
 };
 let str = "houdunren";
 console.dir(str.matchAll(/(U)/i));
+```
+## exec
+使用 g 模式修正符并结合 exec 循环操作可以获取结果和匹配细节
+``` js
+<body>
+  <h1>houdunren.com</h1>
+  <h2>hdcms.com</h2>
+  <h1>后盾人</h1>
+</body>
+<script>
+  function search(string, reg) {
+    const matchs = [];
+    while ((data = reg.exec( string))) {
+      matchs.push(data);
+    }
+    return matchs;
+  }
+  console.log(search(document.body.innerHTML, /<(h[1-6])>[\s\S]+?<\/\1>/gi));
+</script>
+```
+使用上面定义的函数来检索字符串中的网址
+``` js
+let hd = `https://hdcms.com  
+https://www.sina.com.cn
+https://www.houdunren.com`;
+
+let res = search(hd, /https?:\/\/(\w+\.)?(\w+\.)+(com|cn)/gi);
+console.dir(res);
 ```
