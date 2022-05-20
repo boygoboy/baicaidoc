@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-04-13T14:06:24.404Z
+date: 2022-05-20T07:46:45.992Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -73,7 +73,7 @@ send()方法可以返回响应信息
 const express=require('express')
 const app=express()
 app.get('/get',(req,res)=>{
-console.log(res.query) //输出：{name:aa,age:18}
+console.log(req.query) //输出：{name:aa,age:18}
 })
 app.listen(80,()=>{console.log('server is started at http://127.0.0.1')})
 ```
