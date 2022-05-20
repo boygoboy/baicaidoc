@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-05-20T07:46:45.992Z
+date: 2022-05-20T07:47:37.744Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -85,7 +85,7 @@ url：http://127.0.0.1/33
 const express=require('express')
 const app=express()
 app.get('/get/:id(req,res)=>{
-console.log(res.params) //输出：{id:33}
+console.log(req.params) //输出：{id:33}
 })
 app.listen(80,()=>{console.log('server is started at http://127.0.0.1')})
 ```
