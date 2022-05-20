@@ -2,7 +2,7 @@
 title: express模块
 description: express的使用
 published: 1
-date: 2022-05-20T07:48:52.573Z
+date: 2022-05-20T08:21:02.658Z
 tags: express
 editor: markdown
 dateCreated: 2022-04-10T11:04:52.890Z
@@ -464,19 +464,8 @@ module.exports=babelencoded
 ```
 **mc.js中注册使用中间件**
 ``` js
-const qs=require('querystring')
-const babelencoded=function(req,res,next){
-    let str=''
-    req.on('data',(chunk)=>{
-        str+=chunk
-    })
-    req.on('end',()=>{
-        const body=qs.parse(str)
-        req.body=body
-        next()
-    })
-}
-module.exports=babelencoded
+const babelencoded=require(./custommc)
+app.use(babelencoded)
 ```
 # 编写get接口
 **apirouter.js文件**
