@@ -2,7 +2,7 @@
 title: scss语法基础
 description: scss
 published: 1
-date: 2022-09-02T05:21:15.812Z
+date: 2022-09-02T09:32:19.309Z
 tags: css
 editor: markdown
 dateCreated: 2022-09-02T05:21:15.812Z
@@ -1508,4 +1508,5 @@ a. @extend、@Mixin和@function的选择
 >
 >如果想要进一步了解，就必须先去学习下Ruby，使用Ruby相关模块进行更丰富地学习
 
-### Unfinished...
+### 参考网址
+  [sass中文网](https://www.sass.hk/docs/)
