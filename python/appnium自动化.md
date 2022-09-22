@@ -2,7 +2,7 @@
 title: appnium自动化
 description: 自动化操作手机app
 published: 1
-date: 2022-09-22T03:20:18.374Z
+date: 2022-09-22T08:08:21.584Z
 tags: appnium
 editor: markdown
 dateCreated: 2022-09-22T02:12:03.355Z
@@ -27,3 +27,12 @@ dateCreated: 2022-09-22T02:12:03.355Z
 创建ANDROID_HOME变量，变量值为andriod sdk文件所在目录路径，例如：D:\enviroment\andriodsdk
 + 配置path
 编辑path添加platform-tools和tools文件夹的路径，例如：D:\enviroment\andriodsdk\platform-tools,D:\enviroment\andriodsdk\tools
+## 配置手机模拟器
+1. 下载模拟器
+这里下载夜神模拟器，直接去官网下载
+2. 替换adb.exe和nox_adb.exe为androidsdk下的platform-tools的adb.exe.
+## 下载appnium-client
+``` shell
+pip install Appium-Python-Client
+```
+## 使用
