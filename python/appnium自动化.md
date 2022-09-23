@@ -2,7 +2,7 @@
 title: appnium自动化
 description: 自动化操作手机app
 published: 1
-date: 2022-09-23T07:15:35.504Z
+date: 2022-09-23T08:05:42.984Z
 tags: appnium
 editor: markdown
 dateCreated: 2022-09-22T02:12:03.355Z
@@ -115,3 +115,61 @@ driver.quit()
 + get_attribute(属性名称)获取属性值
 + location 获取元素左上角的坐标（相对于屏幕的左上角）
 + size获取元素的宽高（字典）
+2. 输入文本
++ send_keys(文本内容)
+可以输入文字，但对于中文，在连接设备的时候要加上配置
+``` py
+desired_caps['unicodeKeyboard']=True #unicode设置（允许中文输入）
+desired_caps['resetKeyboard']=True #键盘设置（允许中文输入）
+```
+对于同一个元素，多次调用此方法会先一个个删掉原有内容，再输入
++ clear()
+清空文本框中的内容
+# 查找元素
+1. 概述
+查找元素的方法与selenium的元素定位方法类似，大多使用xpath定位的方式，其中查找元素需要借助Androidsdk安装目录下的tools文件夹下的**uiautomatorviewer可执行程序**。
+2. 案列
+``` py
+from appium import webdriver
+import time
+
+# 连接移动设备所必须的参数
+desired_caps = {}
+
+# 当前要测试的设备的名称
+desired_caps["deviceName"] = "127.0.0.1:62001"
+# 系统
+desired_caps["platformName"] = "Android"
+# 系统的版本
+desired_caps["platformVersion"] = "7.1"
+# 要启动app的名称(包名)
+desired_caps["appPackage"] = "com.android.settings"
+# 要启动的app的哪个界面
+desired_caps["appActivity"] = ".Settings"
+
+driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub",desired_capabilities=desired_caps)
+
+print(driver.current_package)
+print(driver.current_activity)
+time.sleep(1)
+# print(driver.page_source)
+
+# 在Android手机中 text并不是文本 而是属于标签的属性
+# driver.find_element_by_xpath("//*[text()='显示']").click()
+
+el= driver.find_element_by_xpath("//*[@text='显示']")
+
+print(el.size)
+print(el.text)
+print(el.get_attribute("text"))
+print(el.location)
+time.sleep(1)
+print(driver.current_package)
+print(driver.current_activity)
+
+time.sleep(3)
+# 关闭app
+driver.close_app()
+# 释放资源
+driver.quit()
+```
