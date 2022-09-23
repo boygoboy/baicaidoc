@@ -2,7 +2,7 @@
 title: appnium自动化
 description: 自动化操作手机app
 published: 1
-date: 2022-09-22T08:08:21.584Z
+date: 2022-09-23T06:27:06.537Z
 tags: appnium
 editor: markdown
 dateCreated: 2022-09-22T02:12:03.355Z
@@ -35,4 +35,13 @@ dateCreated: 2022-09-22T02:12:03.355Z
 ``` shell
 pip install Appium-Python-Client
 ```
-## 使用
+## 使用appium
+1. 下载
+官网上下载appium
+2. 启动appium
+启动appium可以看到连接地址代码中需要用到
+3. 测试appium是否连接到模拟器
+打开cmd输入：
+``` py
+adb devices
+```
