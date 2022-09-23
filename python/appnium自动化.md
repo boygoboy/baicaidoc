@@ -2,7 +2,7 @@
 title: appnium自动化
 description: 自动化操作手机app
 published: 1
-date: 2022-09-23T08:05:42.984Z
+date: 2022-09-23T08:53:47.885Z
 tags: appnium
 editor: markdown
 dateCreated: 2022-09-22T02:12:03.355Z
@@ -173,3 +173,23 @@ driver.close_app()
 # 释放资源
 driver.quit()
 ```
+# 模拟手势
+## 滚动
++ 使用方法
+``` py
+swipe(self,start_x:int,start_y:int,end_x:int,end_y:int,duration:int=0)
+```
+> 注意duration默认是600ms,会影响实际滚动距离，此外click方法实际上不是点击元素，而是点元素所在位置。当滑动时点击元素可能点不准需要在点击之前睡一会等待滑动结束。
+{.is-warning}
+
+``` py
+scroll(origin_el,destination_el,duration)
+```
+> scroll直接传递元素作为参数即可，不需要手动获取位置。
+{.is-info}
+
+## 拖拽
++ 概述
+在安卓中，拖拽=按下 等待一定时间移动松手
+
+
