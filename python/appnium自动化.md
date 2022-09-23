@@ -2,7 +2,7 @@
 title: appnium自动化
 description: 自动化操作手机app
 published: 1
-date: 2022-09-23T08:53:47.885Z
+date: 2022-09-23T09:37:20.425Z
 tags: appnium
 editor: markdown
 dateCreated: 2022-09-22T02:12:03.355Z
