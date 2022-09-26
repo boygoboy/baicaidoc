@@ -2,7 +2,7 @@
 title: appnium自动化
 description: 自动化操作手机app
 published: 1
-date: 2022-09-26T01:59:36.970Z
+date: 2022-09-26T03:23:58.887Z
 tags: appnium
 editor: markdown
 dateCreated: 2022-09-22T02:12:03.355Z
@@ -188,12 +188,93 @@ scroll(origin_el,destination_el,duration)
 > scroll直接传递元素作为参数即可，不需要手动获取位置。
 {.is-info}
 
++ 代码
+``` py
+from appium import webdriver
+import time
+
+# 连接移动设备所必须的参数
+desired_caps = {}
+
+# 当前要测试的设备的名称
+desired_caps["deviceName"] = "127.0.0.1:62001"
+# 系统
+desired_caps["platformName"] = "Android"
+# 系统的版本
+desired_caps["platformVersion"] = "7.1"
+# 要启动app的名称(包名)
+desired_caps["appPackage"] = "com.android.settings"
+# 要启动的app的哪个界面
+desired_caps["appActivity"] = ".Settings"
+
+driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub",desired_capabilities=desired_caps)
+
+time.sleep(1)
+
+# 获取当前屏幕的分辨率
+size = driver.get_window_size()
+print(size)
+width = size["width"]
+height = size["height"]
+
+driver.swipe(start_x=width/2,start_y=height/3*2,end_x=width/2,end_y=height/3)
+
+# el1 = driver.find_element_by_xpath("//*[@text='通知']")
+# el2 = driver.find_element_by_xpath("//*[@text='WLAN']")
+#
+# driver.scroll(el1,el2)
+time.sleep(2)
+
+
+
+# 关闭app
+driver.close_app()
+
+time.sleep(2)
+# 释放资源
+driver.quit()
+```
 ## 拖拽
 + 概述
 在安卓中，拖拽=按下 等待一定时间移动松手
 + 使用
 ``` py
 drag_and_drop(origin_el,destination_el)
+```
++ 代码
+``` py
+from appium import webdriver
+import time
+
+# 连接移动设备所必须的参数
+desired_caps = {}
+
+# 当前要测试的设备的名称
+desired_caps["deviceName"] = "127.0.0.1:62001"
+# 系统
+desired_caps["platformName"] = "Android"
+# 系统的版本
+desired_caps["platformVersion"] = "7.1"
+# 要启动app的名称(包名)
+desired_caps["appPackage"] = "com.vphone.launcher"
+# 要启动的app的哪个界面
+desired_caps["appActivity"] = ".launcher3.Launcher"
+
+driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub",desired_capabilities=desired_caps)
+
+time.sleep(1)
+el1 = driver.find_element_by_xpath("//*[@text='酷安']")
+el2 = driver.find_element_by_xpath("//*[@text='京东']")
+
+
+driver.drag_and_drop(el1,el2)
+
+time.sleep(2)
+
+# 关闭app
+driver.close_app()
+# 释放资源
+driver.quit()
 ```
 ## TouchAction
 + 作用
@@ -207,5 +288,127 @@ drag_and_drop(origin_el,destination_el)
 ``` py
 press(self,el,x,y,pressure)
 ```
-如果传递了el参数，x,y可以不传
+如果传递了el参数，x,y可以不传，如果el为None，就需要传递x,y，pressure是ios专用的
+2. 长按
+``` py
+long_press(self,el,x,y,duration=1000)
+```
+如果传递了el参数，x,y可以不传，如果el为None，就需要传递x、y
+3. 等待
+``` py
+wait(self,ms)
+```
+4. 松手
+``` py
+release()
+```
+5. 轻敲（点击）
+``` py
+tap(self,element,x,y,count=1)
+```
+tap和click的区别：click有延迟触发效果（为了校验是不是双击）
+通过tap(el,count=2)可以模拟双击
++ 拖拽示例
+``` py
+from appium import webdriver
+import time
+from appium.webdriver.common.touch_action import TouchAction
+
+# 连接移动设备所必须的参数
+desired_caps = {}
+
+# 当前要测试的设备的名称
+desired_caps["deviceName"] = "127.0.0.1:62001"
+# 系统
+desired_caps["platformName"] = "Android"
+# 系统的版本
+desired_caps["platformVersion"] = "7.1"
+# 要启动app的名称(包名)
+desired_caps["appPackage"] = "com.android.settings"
+# 要启动的app的哪个界面
+desired_caps["appActivity"] = ".Settings"
+
+driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub",desired_capabilities=desired_caps)
+
+time.sleep(1)
+
+el1 = driver.find_element_by_xpath("//*[@text='通知']")
+el2 = driver.find_element_by_xpath("//*[@text='WLAN']")
+
+# 实例化TouchAction
+action = TouchAction(driver)
+# press 既可以使用 坐标 也可以使用元素
+
+# 在移动的过程中 wait是必不可少
+# action.press(el1).wait(500).move_to(el2)
+action.press(x=270,y=640).wait(500).move_to(x=270,y=320)
+action.release()
+
+# 执行  模拟手势的使用  TouchAction 进行模拟手势的时候  一定要记得执行操作
+action.perform()
+time.sleep(3)
+
+# 关闭app
+driver.close_app()
+# 释放资源
+driver.quit()
+```
++ 手势综合案例
+``` py
+from appium import webdriver
+import time
+from appium.webdriver.common.touch_action import TouchAction
+
+# 连接移动设备所必须的参数
+desired_caps = {}
+
+# 当前要测试的设备的名称
+desired_caps["deviceName"] = "127.0.0.1:62001"
+# 系统
+desired_caps["platformName"] = "Android"
+# 系统的版本
+desired_caps["platformVersion"] = "7.1"
+# 要启动app的名称(包名)
+desired_caps["appPackage"] = "com.android.settings"
+# 要启动的app的哪个界面
+desired_caps["appActivity"] = ".Settings"
+
+driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub",desired_capabilities=desired_caps)
+
+time.sleep(1)
+
+el1 = driver.find_element_by_xpath("//*[@text='声音']")
+el2 = driver.find_element_by_xpath("//*[@text='WLAN']")
+
+action = TouchAction(driver)
+action.press(el1).wait(500).move_to(el2)
+action.release()
+
+# 需要执行上面的操作
+action.perform()
+time.sleep(1)
+
+driver.find_element_by_xpath("//*[@text='安全']").click()
+time.sleep(1)
+driver.find_element_by_xpath("//*[@text='屏幕锁定']").click()
+time.sleep(1)
+driver.find_element_by_xpath("//*[@text='图案']").click()
+time.sleep(1)
+
+# 按下的位置 105 450  x 165  y 165
+
+action.press(x=105,y=450).wait(200).move_to(x=270,y=450).wait(200).move_to(x=435,y=450).wait(200).move_to(x=270,y=615)\
+    .wait(200).move_to(x=105,y=780).wait(200).move_to(x=270,y=780).wait(200).move_to(x=435,y=780)
+action.release()
+action.perform()
+
+
+
+time.sleep(2)
+# 关闭app
+driver.close_app()
+# 释放资源
+driver.quit()
+```
+
 
