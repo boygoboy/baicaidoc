@@ -2,7 +2,7 @@
 title: appnium自动化
 description: 自动化操作手机app
 published: 1
-date: 2022-09-26T03:25:46.497Z
+date: 2022-09-26T03:30:53.271Z
 tags: appnium
 editor: markdown
 dateCreated: 2022-09-22T02:12:03.355Z
@@ -410,5 +410,52 @@ driver.close_app()
 # 释放资源
 driver.quit()
 ```
+# driver的其他操作
+1. 描述
++ device_time获取手机时间
++ get_window_size()获取屏幕大小
++ network_connection获取手机网络信息
+1 飞行模式 2 wifi 4 移动数据 6=2+4
++ set_network_connection(网络模拟数字）设置手机网络信息
++ keyevent(按键数字）点击按键
++ get_screenshot_as_file/save_screenshot(图片路径)截屏
++ open_notifications()打开通知栏
++ 代码
+``` py
+from appium import webdriver
+import time
 
+# 连接移动设备所必须的参数
+desired_caps = {}
+
+# 当前要测试的设备的名称
+desired_caps["deviceName"] = "127.0.0.1:62001"
+# 系统
+desired_caps["platformName"] = "Android"
+# 系统的版本
+desired_caps["platformVersion"] = "7.1"
+# 要启动app的名称(包名)
+desired_caps["appPackage"] = "com.android.settings"
+# 要启动的app的哪个界面
+desired_caps["appActivity"] = ".Settings"
+
+driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub",desired_capabilities=desired_caps)
+
+time.sleep(1)
+# print(driver.page_source)
+print(driver.device_time)
+
+print(driver.network_connection)
+
+driver.get_screenshot_as_file("jietu.png")
+
+# driver.save_screenshot()
+driver.open_notifications()
+
+time.sleep(3)
+# 关闭app
+driver.close_app()
+# 释放资源
+driver.quit()
+```
 
