@@ -2,7 +2,7 @@
 title: appnium自动化
 description: 自动化操作手机app
 published: 1
-date: 2022-09-23T09:37:20.425Z
+date: 2022-09-26T01:59:36.970Z
 tags: appnium
 editor: markdown
 dateCreated: 2022-09-22T02:12:03.355Z
@@ -191,5 +191,21 @@ scroll(origin_el,destination_el,duration)
 ## 拖拽
 + 概述
 在安卓中，拖拽=按下 等待一定时间移动松手
-
++ 使用
+``` py
+drag_and_drop(origin_el,destination_el)
+```
+## TouchAction
++ 作用
+构建相对比较复杂的、连续的触摸行为
++ 用法
+1. 创建TouchAction对象，需要把driver作为参数传递
+2. 通过各种方法添加动作
+3. 执行操作perform()
++ 方法
+1. 按下
+``` py
+press(self,el,x,y,pressure)
+```
+如果传递了el参数，x,y可以不传
 
