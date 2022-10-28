@@ -2,7 +2,7 @@
 title: vue基础整理
 description: vue基础知识点整理
 published: 1
-date: 2022-10-24T03:07:52.058Z
+date: 2022-10-28T14:47:57.573Z
 tags: vue
 editor: markdown
 dateCreated: 2022-10-24T03:07:52.058Z
@@ -6016,3 +6016,5 @@ export default router
 2. 现代JavaScript：https://zh.javascript.info/
 3. MDN文档：https://developer.mozilla.org/zh-CN/docs/Web
 4. 我是你的超级英雄 https://juejin.cn/post/6844903895467032589
+# 后续
+vue3总结笔记点击[这里](https://github.com/Panyue-genkiyo/vue3-learning)
