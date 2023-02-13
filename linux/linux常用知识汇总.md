@@ -2,7 +2,7 @@
 title: Linuix常用知识汇总
 description: 系统的描述Linux相关知识
 published: 1
-date: 2023-02-12T07:05:18.586Z
+date: 2023-02-13T14:22:42.279Z
 tags: linux
 editor: markdown
 dateCreated: 2023-02-12T06:26:17.898Z
@@ -39,4 +39,22 @@ PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8v
 + /usr/local[常用]这是另一个给主机额外安装软件所安装的目录。一般是通过编译源码方式安装的程序
 + /var[常用]这个目录中存放着在不断扩充着的东西，习惯将经常被修改的目录放在这个目录下。包括各种日志文件
 + /selinux[security-enhancedlinux]SELinux是一种安全子系统,它能控制程序只能访问特定文件,有三种工作模式，可以自行设置.
-
+## vim的常用操作
+1. vim三种模式的切换
+vim有一般模式、编辑模式、命令模式，这三者的切换关系见下图：
+![vim三种模式关系](https://img.baicai.blog/imgs/2023/02/13/1c9366f4c6dc21c2.png)
+2. 三种模式下常用的操作
++ 一般模式
+一般模式下常用的操作如下：
+   1. 拷贝当前行，使用yy可以拷贝当前行，然后执行p可以粘贴
+   2. 拷贝当前以下的5行，使用5yy，然后输入p进行粘贴
+   3. 快速回到首行和末尾行，使用G定位到末尾行，使用gg回到首行
+   4. 撤销命令输入u即可
+   5. 光标定位到第几行：输入数字+shift+g,例如光标定位到20行：输入20+shift+g
++ 命令行模式
+   1. 查找文本内容，输入/加要查找的内容然后回车即可，查找下一个输入n，
+   2. 设置文本行号，执行:set nu命令，取消设置的文本行号执行：set nonu
++ 插入模式
+插入模式输入文本内容即可，但是需要知道插入模式转化为一般模式使用esc键退出至一般模式。
+3. 最后放一张vim键盘图
+![vim键盘图](https://img.baicai.blog/imgs/2023/02/13/f5d2916e2620ce58.png)
