@@ -2,7 +2,7 @@
 title: Linuix常用知识汇总
 description: 系统的描述Linux相关知识
 published: 1
-date: 2023-02-15T14:02:47.546Z
+date: 2023-02-18T15:30:55.280Z
 tags: linux
 editor: markdown
 dateCreated: 2023-02-12T06:26:17.898Z
@@ -207,8 +207,157 @@ systemctl set-default graphical.target
 使用help加帮助的命令可查看指令使用信息
 2. man
 使用man加命令可查看该命令使用介绍
-
-
-
-
-
+# 文件目录
+1. pwd
+pwd指令显示当前工作目录的绝对路径
+2. ls
+列出目录或者文件
++ ls -a 列出当前目录所有文件包括隐藏文件
++ ls -l 以列表的方式显示信息
+以上两条命令可以组合使用，即ls -al
+3. cd
+目录跳转命令，例如：
++ cd /root 以绝对路径跳转
++ cd ../data/etc 以相对路径跳转
++ cd .. 返回上级目录
++ cd ~ 回到家目录
+4. mkdir
++ 描述
+该命令可以创建目录
++ 常用的两条命令
+``` shell
+mkdir 目录名 #创建单极目录
+mkdir -p /root/data/config #创建多级目录，即路径下没有的目录都会创建
+```
+5. 删除目录
++ 删除空目录
+``` shell
+rmdir 目录名称
+```
++ 删除非空目录
+``` shell
+rm -rf /root/data/config
+```
+5. 创建空文件
+``` shell
+touch /home/tom.txt
+```
+6. 复制文件或者整个目录
++ 复制某个文件
+``` shell
+cp hello.txt /home/test #将hello.txt文件复制到/home/test目录下
+```
++ 复制整个目录
+复制整个目录需要用-r递归复制
+``` shell
+cp -r /home/bbb /opt # 将bbb目录复制到opt目录下
+```
++ 强制覆盖整个目录
+``` shell
+\cp -r /home/bbb /opt
+```
+7. 重命名移动目录文件
++ 重命名目录文件
+``` shell
+mv oldFileName newFileName
+```
++ 移动目录文件
+``` shell
+mv /temp/test /home/
+```
+8. 查看文件
++ 基本用法
+``` shell
+cat 文件名
+```
++ 常用选项
+-n : 显示行号
+``` shell
+cat -n test.txt # 查看test.txt文件并显示行号
+```
++ 使用管道命令未增强查看功能
+``` shell
+cat -n /etc/config.yaml|more 
+```
+9. more指令
++ 描述
+more指令用于查看文件属于增强查看，有丰富的查看操作
++ 基本用法
+``` shell
+more 要查看的文件
+```
++ more查看操作说明
+![more查看操作](https://img.baicai.blog/imgs/2023/02/18/ab594d1f4c22c92b.png)
+10. less指令
++ 描述
+less指令也用于查看文件，比more指令更加强大
++ 基本用法
+less 要查看的文件
++ 操作说明
+![less操作说明](https://img.baicai.blog/imgs/2023/02/18/8e5ab27d44120a8b.png)
+10. 输出指令echo
++ 基本语法
+``` shell
+echo [选项] [输出内容]
+```
++ 例子
+``` shell
+echo hello # 输出常量
+echo $PATH # 输出变量值
+```
+11. head指令
++ 描述
+用于输出文件开头部分内容，默认显示文件前10行内容
++ 基本用法
+``` shell
+head 文件 # 查看文件头10行内容
+head -n 5 # 查看文件头5行内容
+```
+12. tail指令
++ 描述
+用于输出文件中尾部内容
++ 基本语法
+``` shell
+tail 文件 查看文件尾10行
+tail -n 5 查看文件尾5行
+```
++ 实时追踪文档的更新
+``` shell
+tail -f 文件 #该命令会监控文件内容变化
+```
+13. ’>‘和’>>‘指令
++ 描述
+’>‘输出重定向，'>>'追加
++ 基本语法
+（1）ls -l > a.txt 列表的内容写入文件a.txt中（覆盖写）
+（2）ls -al >> a.txt 列表的内容覆盖到文件a.txt中
+（3）cat 文件1 > 文件2 将文件1的内容覆盖到文件2
+（4）echo "内容" >> a.txt 将内容写入到a.txt中
+14. 建立软链接
++ 描述
+ln 指令可以建立软链接，相当于建立快捷方式
++ 基本用法
+ln -s [源文件目录] [软链接名] 
++ 例子
+``` shell
+ln -s /root /home/myroot # 在home目录下创建一个myroot软链接
+```
++ 删除软链接
+``` shell
+rm -rf /home/myroot
+```
+15. history
++ 描述
+用于查看历史执行命令
++ 基本用法
+``` shell
+history
+```
++ 例子
+``` shell
+history 10 # 显示最近10个指令
+```
++ 执行某个历史指令
+``` shell
+!5 # 执行历史编号为的指令
+```
