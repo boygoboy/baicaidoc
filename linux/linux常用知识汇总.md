@@ -2,7 +2,7 @@
 title: Linuix常用知识汇总
 description: 系统的描述Linux相关知识
 published: 1
-date: 2023-02-18T15:34:01.271Z
+date: 2023-02-18T15:36:23.229Z
 tags: linux
 editor: markdown
 dateCreated: 2023-02-12T06:26:17.898Z
