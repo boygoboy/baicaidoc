@@ -2,7 +2,7 @@
 title: Linuix常用知识汇总
 description: 系统的描述Linux相关知识
 published: 1
-date: 2023-02-18T15:36:23.229Z
+date: 2023-02-21T12:48:17.605Z
 tags: linux
 editor: markdown
 dateCreated: 2023-02-12T06:26:17.898Z
@@ -361,3 +361,67 @@ history 10 # 显示最近10个指令
 ``` shell
 !5 # 执行历史编号为的指令
 ```
+# 日期时间
++ 基本语法
+1. date 显示当前时间
+2. date+ %Y 显示当前年份
+3. date + %m显示当前月份
+4. date+ %d显示当前是哪一天
+5. date "%Y-%m-%d %H:%M:%S" 显示年月日时分秒
++ date指令设置日期
+1. date -s 字符串时间
+``` shell
+date -s "2023-02-21 16:00:00" 
+```
++ cal指令显示日历
+1. 基本语法
+cal[选项] 不加选项显示本月日历
+2. 显示具体年份日历
+``` shell
+cal 2020
+```
+# 文件查找指令
+## find指令
++ 描述
+find指令从指定的目录向下递归遍历各个子目录，经满足的文件或者目录显示在终端
++ 基本语法
+``` shell
+find [搜索范围] [选项]
+```
+**选项说明**
+|选项|功能|
+|----|----|
+|-name<查询方式>|按指定的文件名查找模式查找文件|
+|-user<用户名>|查找属于指定用户名所有文件|
+|-size<文件大小>|按照指定的文件大小查找文件|
++ 案例
+1. 按文件名：根据名称查找/home目录下的hello.txt文件
+``` shell
+find /home -name hello.txt
+```
+2. 按拥有者：查找/opt目录下，用户名称为nobody的文件
+``` shell
+find /opt -user nobody
+```
+3. 查找整个Linux系统下大于200M的文件（+n大于 -n小于 n等于，单位有k,M,G）
+``` shell
+find / -size +200M
+```
+## locate指令
++ 描述
+locate可有快速定位文件路径。其原理是利用事先在系统重中建立好的locate数据库快速定位文件
++ 基本语法
+locate 搜索文件
++ 特别说明
+执行locate指令之前要运行如下命令
+``` shell
+updatedb
+```
++ 案例
+用locate指令快速定位hello.txt文件所在目录
+``` shell
+locate hello.txt
+```
+
+which
+
