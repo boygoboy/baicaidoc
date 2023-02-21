@@ -2,7 +2,7 @@
 title: Linuix常用知识汇总
 description: 系统的描述Linux相关知识
 published: 1
-date: 2023-02-21T12:48:17.605Z
+date: 2023-02-21T13:40:19.072Z
 tags: linux
 editor: markdown
 dateCreated: 2023-02-12T06:26:17.898Z
@@ -422,6 +422,101 @@ updatedb
 ``` shell
 locate hello.txt
 ```
+> 拓展
+{.is-info}
 
-which
-
+which指令可以查看某个指令在哪个目录下，比如ls
+``` shell
+which ls
+```
+## grep指令和管道符 |
++ 描述
+grep过率查找，管道符 | 表示及那个前一个命令的处理结果输出传递给后面的命令处理
++ 基本语法
+grep[选项] 查找内容 源文件
++ 常用选项
+|选项|功能|
+|----|----|
+|-n|显示匹配行及行号|
+|-i|忽略字母大小写|
++ 应用案列
+请在hello.txtg文件中，查找yes所在行，并显示行号
+写法1
+``` shell
+cat /home/hello.txt |grep -n "yes"
+```
+写法2
+``` shell
+grep -n "yes" /home/hello.txt
+```
+# 解压缩指令
+## gzip和gunzip指令
++ 描述
+gzip用于压缩文件，gunzip用于解压文件
++ 基本语法
+gzip 文件 可将文件压缩为*.gz文件
+gunzip 文件.gz 
++ 应用案例
+1. 将/home目录下的hello.txt文件进行压缩
+``` shell
+gzip /home/hello.txt
+```
+2. 将/home目录下的hello.txt.gz进行解压
+``` shell
+gunzip /home/hello.txxt.gz
+```
+## zip和unzip指令
++ 描述
+zip用于压缩，unzip用于解压
++ 基本语法
+``` shell
+zip [选项] xxx.zip 将要压缩的内容（功能描述：压缩文件和目录的命令）
+unzip [选项] xxx.zip （功能描述：解压缩文件）
+```
++ zip常用选项
+-r:递归压缩，即压缩目录
++ unzip常用选项
+-d<目录> ：指定解压后文件的存放目录
++ 应用案例
+1. 将/home下的所有文件文件夹进行压缩成myhome.zip
+``` shell
+zip -r myhome.zip /home/
+```
+2. 将myhome.zip解压到/opt/temp目录下
+``` shell
+mkdir -p /opt/tmp
+unzip -d /opt/tmp /home/myhome.zip
+```
+## tar指令
++ 描述
+tar指令是打包指令，最后打包的文件是.tar.gz
++ 基本语法
+``` shell
+tar [选项] xxx.tar.gz 打包的内容 # 打包目录，压缩后的文件格式.tar.gz
+```
++ 选项说明
+|选项|功能|
+|----|----|
+|-c|产生.tar打包文件|
+|-v|显示详细信息|
+|-f|指定压缩后的文件名|
+|-z|打包同时压缩|
+|-x|解包.tar文件|
++ 应用实例
+1. 压缩多个文件，将/home/pig.txt和/home/cat.txt 压缩成pc.tar.gz
+``` shell
+tar -zcvf pc.tar.gz /home/pig.txt /home/cat.txt
+```
+2. 将/home的文件夹压缩成myhome.tar.gz
+``` shell
+tar -zcvf myhome.tar.gz /home/
+```
+3. 将pc.tar.gz解压到当前目录
+``` shell
+tar -zxvf pc.tar.gz
+```
+4. 将myhome.tar.gz解压到/opt/tmp2目录下
+``` shell
+mkdir /opt/tmp2
+tar -zxvf /home/myhome.tar.gz -C /opt/tmp2 
+```
