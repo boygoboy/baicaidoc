@@ -2,7 +2,7 @@
 title: Linuix常用知识汇总
 description: 系统的描述Linux相关知识
 published: 1
-date: 2023-02-21T13:40:19.072Z
+date: 2023-02-27T07:30:19.998Z
 tags: linux
 editor: markdown
 dateCreated: 2023-02-12T06:26:17.898Z
@@ -520,3 +520,149 @@ tar -zxvf pc.tar.gz
 mkdir /opt/tmp2
 tar -zxvf /home/myhome.tar.gz -C /opt/tmp2 
 ```
+# Linux组的管理和权限管理
+## 组的基本介绍
+linux中的每个用户必须属于一个组不能独立于组外，每个文件都有所有者、所在组和其他组的概念。
+## 文件和各个组的关系
+![文件和组关系](https://img.baicai.blog/imgs/2023/02/27/3f981e83be45d88c.png)
+## 文件目录的所有者
+创建文件目录的用户默认为文件的所有者
+1. 查看文件目录的所有者
+``` shell
+ls -alh
+```
+输出
+![](https://img.baicai.blog/imgs/2023/02/27/a0f38cac03a43c30.png)
+2. 修改文件目录的所有者
+命令：chown 用户名 文件名
+例子：
+``` shell
+chown tom /home/test.txt # 将text.txt文件所有这修改为tom
+```
+## 组的创建
+1. 添加组
+``` shell
+groupadd tomony #添加tomony组
+```
+2. 创建用户同时为其指定组
+``` shell
+useradd -g tomony tom
+```
+## 文件目录中的所在组
+当某个用户创建了文件目录后，用户的所在组就是文件目录的所在组
+1. 查看文件目录所在组
+``` shell
+ls -alh
+```
+输出
+![](https://img.baicai.blog/imgs/2023/02/27/5a45b6989e159b7b.png)
+2. 修改文件目录所在组
+命令：chgrp 组名 文件名
+例子：
+使用root用户创建文件orange.txt,看看当前这个文件属于哪个组，然后将这个文件所在组，修改到fruit组
+``` shell
+groupadd fruit
+touch orange.txt
+ls -alh
+chgrp fruit orange.txt
+```
+## 其他组
+除文件的所有者和所在组的用户外，系统的其它用户都是文件的其它组
+## 改变用户的所在组
+命令：usermod -g 新组名 用户名
+``` shell
+usermod -g newgroup tom
+```
+> 拓展
+{.is-success}
+
+usermod -d 目录名 用户名 可以改变用户等了的初始目录，必须有进入该目录的权限
+# 文件目录的权限
+## 看懂文件权限
+1. 执行ls -l，输出如下：
+![](https://img.baicai.blog/imgs/2023/02/27/92919f742e3d61e5.png)
+2. 看懂文件权限相关各个属性
+上图文件第一列属性可以看出文件的类型及权限，总共有10位即0-9，下面对其说明：
+第0位确定文件类型（d - l c b）
+l是链接，相当于快捷方式
+d是目录
+c是字符设备文件，鼠标键盘
+b是快设备，比如键盘
+第1-3位确定所有这的权限
+第4-6位确定所属组的权限
+第7-9位确定其他用户拥有的权限
+备注：r代表读权限，w代表写权限，x代表执行权限，下面会详细描述
+## rwx的详细描述
++ 在文件中
+1. [r]代表可读(read):可以读取,查看
+2. [w]代表可写(write):可以修改,但是不代表可以删除该文件,删除一个文件的前提条件是对该文件所在的目录有写权限，才能删除该文件.
+3. [x]代表可执行(execute):可以被执行
++ 在目录中
+1. [r]代表可读(read):可以读取，ls查看目录内容
+2. [w]代表可写(write):可以修改,对目录内创建+删除+重命名目录
+3. [x]代表可执行(execute):可以进入该目录
+## 修改权限
+通过chmod可以修改文件目录权限
++ 第一种方式
+1. '+ - ='变更权限
+例如
+``` shell
+chmod u=rwx,g=rx,o=x test.txt
+chmod o+w test.txt
+chmod a-x test.txt
+```
+2. 参数介绍
+u:所有者；g:所有组 o:其他人 a:所有人（u g o的总和）
+3. 案例
+给abc文件的所有者读写执行的权限，给所在组读执行权限，给其它组读执行权限
+``` shell
+chmod u=rwx,g=rx,o=rx abc
+```
+给abc文件的所有者除去执行的权限，增加组写的权限
+``` shell
+chmod u-x,g+w abc
+```
+给abc文件的所有用户添加读的权限
+``` shell
+chmod a+r abc
+```
++ 第二种方式
+通过数字变更权限
+r=4 w=2 x=1
+chmod u=rwx,g=rx,o=x 文件目录名相当于chmod 751 文件目录名
+案例：
+将/home/abc.txt文件的权限修改成rwxr-xr-x,适用给数字的方式实现：
+chmod 755 /home/abc.txt
+## 改变文件所有者
+1. 基本命令
+``` shell
+chown newowner 文件/目录 
+chown newowner:newgroup 文件/目录 #改变所有者和所在组
+-R 递归子文件都生效
+```
+2. 案例
+将/home/abc.txt文件的所有者修改成tom
+``` shell
+chown tom /home/abc.txt
+```
+将/home/test目录下所有文件和目录所有者都修改成tom
+``` shell
+chown -R tom /home/test
+```
+## 修改文件所在组
+1. 基本命令
+chgrp newgroup 文件/目录
+2. 案例
+请将/home/abc.txt文件的所在组修改成shaolin
+``` shell
+groupadd shaolin 
+chgrp shaolin /home/abc.txt
+```
+请将/home/test目录下所有的文件和目录的所在组都修改成shaolin
+``` shell
+chgrp -R shaolin /home/test
+```
+
+
+
+
