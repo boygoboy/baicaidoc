@@ -2,7 +2,7 @@
 title: Linuix常用知识汇总
 description: 系统的描述Linux相关知识
 published: 1
-date: 2023-02-27T07:30:19.998Z
+date: 2023-03-06T02:51:25.332Z
 tags: linux
 editor: markdown
 dateCreated: 2023-02-12T06:26:17.898Z
@@ -662,7 +662,71 @@ chgrp shaolin /home/abc.txt
 ``` shell
 chgrp -R shaolin /home/test
 ```
-
-
-
-
+## linux定时任务调度
++ 重复执行的定时调度
+1. 基本语法
+crontab[选项]
+常用选项：
+![](https://img.baicai.blog/imgs/2023/03/06/2ff5312343ad495f.png)
+2. 循环定时任务调度原理图
+![](https://img.baicai.blog/imgs/2023/03/06/2a4999d70f171b58.png)
+3. 快速使用
+定时任务调度文件在/etc/crontab文件下
+适用crontab -e 命令 快速添加定时任务，例如：
+``` shell
+*/1****ls–l/etc/>/tmp/to.tx
+```
+4. 对于循环定时任务的一些特殊占位符含义，见下图：
+![](https://img.baicai.blog/imgs/2023/03/06/75501ce20f5b77d0.png)
+![](https://img.baicai.blog/imgs/2023/03/06/3efe8ff8f0a4c862.png)
+占位符和特殊符号示例：
+![](https://img.baicai.blog/imgs/2023/03/06/1ba012579d8a351a.png)
+5. 实际使用案例
+案例1：每隔1分钟，就将当前的日期信息，追加到/tmp/mydate文件中
+``` shell
+*/1****date>>/tmp/mydate
+```
+案例2：每隔1分钟，将当前日期和日历都追加到/home/mycal文件中步骤:
+(1)vim/home/my.sh写入内容date>>/home/mycal和cal>>/home/mycal
+(2)给my.sh增加执行权限，chmodu+x/home/my.sh
+(3)crontab-e增加*/1****/home/my.s
+案例3:每天凌晨2:00将mysql数据库testdb，备份到文件中。提示:指令为mysqldump-uroot-p密码数据库>/home/db.bak
+步骤(1)crontab-e
+步骤(2)02***mysqldump-uroot-proottestdb>/home/db.bak
+6. crond相关指令
+``` shell
+conrtab –r #终止任务调度
+crontab –l #列出当前有那些任务调度
+service crond restart #[重启任务调度]
+```
+## 一次性定时任务
++ 介绍
+1. at命令是一次性定时计划任务，at的守护进程atd会以后台模式运行，检查作业队列来运行。
+2. 默认情况下，atd守护进程每60秒检查作业队列，有作业时，会检查作业运行时间，如果时间与当前时间匹配，则运行此作业。
+3. at命令是一次性定时计划任务，执行完一个任务后不再执行此任务了。
+4. 在使用at命令的时候，一定要保证atd进程的启动,可以使用相关指令来查看ps-ef|grepatd//可以检测atd是否在运行。
+5. 大致图例：
+![](https://img.baicai.blog/imgs/2023/03/06/0cffe7a6885ff044.png)
++ at基本命令
+``` shell
+at [选项][时间]
+```
+进入定时任务添加模式中退出需要输出两次：Ctrl+D
++ at 命令选项
+![](https://img.baicai.blog/imgs/2023/03/06/3ff6c7fa9b298c88.png)
++ at 时间定义
+1. 当天的hh:mm（小时:分钟）式的时间指定。假如该时间已过去，那么就放在第二天执行。例如：04:00
+2. midnight（深夜），noon（中午），teatime（饮茶时间，一般是下午4点）等比较模糊的词语来指定时间。
+3. 12小时计时制，即在时间后面加上AM（上午）或PM（下午）来说明是上午还是下午。例如：12pm
+4. 命令执行的具体日期，指定格式为monthday（月日）或mm/dd/yy（月/日/年）或dd.mm.yy（日.月.年），指定的日期必须跟在指定时间的后面。例如：04:00	2021-03-1
+5. 相对计时法。指定格式为：now+counttime-units，now就是当前时间，time-units是时间单位，这里能够是minutes（分钟）、hours（小时）、days（天）、weeks（星期）。count是时间的数量，几天，几小时。例如：now+5minutes
+6. 使用today（今天）、tomorrow（明天）来指定完成命令的时间。
++ 应用案例
+案例1：2天后的下午5点执行/bin/ls/home
+![](https://img.baicai.blog/imgs/2023/03/06/227bc57f59144bff.png)
+案例2：明天17点钟，输出时间到指定文件内比如/root/date100.log
+![](https://img.baicai.blog/imgs/2023/03/06/2a93b37af3e14a9b.png)
+案例3：2分钟后，输出时间到指定文件内比如/root/date200.log
+![](https://img.baicai.blog/imgs/2023/03/06/d91ab38df8ba4a69.png)
+案例4：删除已经设置的任务,atrm编号
+atrm4//表示将job队列，编号为4的job删除.
