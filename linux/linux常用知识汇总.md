@@ -2,7 +2,7 @@
 title: Linuix常用知识汇总
 description: 系统的描述Linux相关知识
 published: 1
-date: 2023-03-06T02:51:25.332Z
+date: 2023-03-07T02:38:34.936Z
 tags: linux
 editor: markdown
 dateCreated: 2023-02-12T06:26:17.898Z
@@ -730,3 +730,107 @@ at [选项][时间]
 ![](https://img.baicai.blog/imgs/2023/03/06/d91ab38df8ba4a69.png)
 案例4：删除已经设置的任务,atrm编号
 atrm4//表示将job队列，编号为4的job删除.
+## linux磁盘分区挂载
++ 原理介绍
+1. Linux来说无论有几个分区，分给哪一目录使用，它归根结底就只有一个根目录，一个独立且唯一的文件结构，Linux中每个分区都是用来组成整个文件系统的一部分。
+2. Linux采用了一种叫“载入”的处理方法，它的整个文件系统中包含了一整套的文件和目录，且将一个分区和一个目录联系起来。这时要载入的一个分区将使它的存储空间在一个目录下获得。
+3. 原理图
+![](https://img.baicai.blog/imgs/2023/03/07/f5c17c798ff25436.png)
++ 硬盘说明
+1. 现在有两类硬盘IDE硬盘和SCSI硬盘，即俗称的hd硬盘和ssd硬盘，ssd硬盘读写性能比hd硬盘要高一搬作为系统盘
+2. hd硬盘
+hdx~的含义：
+x为盘号有a、b、c、等。~为分区，1-4为主分区或拓展分区，5往后为逻辑分区。
+3. ssd硬盘
+sdx~含义：
+x有a、b、c等代表盘号，~为分区
++ 查看设备挂载情况
+1. 命令
+``` shell
+lsblk -f
+```
+![](https://img.baicai.blog/imgs/2023/03/07/31a36ae9dfa3a683.png)
++ 挂载一块硬盘
+1. 大致流程
+（1）虚拟机添加硬盘
+（2）分区
+（3）格式化
+（4）挂载
+（5）设置可以自动挂载
+2. 虚拟机添加硬盘
+实际使用场景需要购买硬盘然后有添加硬盘选项
+3. 分区
+（1）分区命令
+``` shell
+fdisk /dev/sdb # 开始对/sdb分区
+m 显示命令列表
+p 显示磁盘分区同fdisk–l
+n 新增分区
+d 删除分区
+w 写入并退出
+```
+（2）流程
+开始分区后输入n，新增分区，然后选择p，分区类型为主分区。两次回车默认剩余全部空间。最后输入w写入分区并退出，若不保存退出输入q
+![](https://img.baicai.blog/imgs/2023/03/07/a43f22c4a65d023a.png)
+4. 格式化
+（1）基本命令
+``` shell
+mkfs -t ext4 /dev/sdb1
+```
+（2）解除挂载
+umount 设备名称或者挂载目录
+``` shell
+umount /dev/sdb1 或者umount /newdisk
+```
+5. 挂载
+mount 设备名称 挂载目录
+``` shell
+mount /dev/sdb1 /newdisk
+```
+6. 设置自动挂载
+（1）修改/etc/fstab配置文件
+![](https://img.baicai.blog/imgs/2023/03/07/67f696180abdedf5.png)
+（2）添加完成后执行 mount –a即刻生效
++ 查询磁盘整体使用情况
+1. 命令
+``` shell
+df-h
+```
+![](https://img.baicai.blog/imgs/2023/03/07/ee01d3ead8cadd15.png)
++ 查询指定目录磁盘占用情况
+1. 基本语法
+``` shell
+du -h
+```
+2. 参数
+查询指定目录的磁盘占用情况，默认为当前目录
+``` shell
+-s #指定目录占用大小汇总
+-h #带计量单位
+-a #含文件
+--max-depth=1 #子目录深度
+-c #列出明细的同时，增加汇总值
+```
+3. 实例
+查询/opt目录的磁盘占用情况，深度为1
+![](https://img.baicai.blog/imgs/2023/03/07/e3fb9e7d3de8e48b.png)
++ 磁盘相关实用指令
+1. 统计/opt文件夹下文件的个数
+``` sehll
+ls -l /opt|grep"^-"|wc -l
+```
+2. 统计/opt文件夹下目录的个数
+``` shell
+ls -l /opt|grep"^d"|wc -l
+```
+3. 统计/opt文件夹下文件的个数，包括子文件夹里的
+``` shell
+ls -lR /opt|grep"^-"|wc -l
+```
+4. 统计/opt文件夹下目录的个数，包括子文件夹里的
+``` shell
+ls -lR /opt|grep"^d"|wc -l
+```
+5. 以树状显示目录结构tree目录，注意，如果没有tree,则使用yuminstalltree安装
+![](https://img.baicai.blog/imgs/2023/03/07/864a66d17d2fa548.png)
+
